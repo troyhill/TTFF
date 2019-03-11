@@ -10,23 +10,23 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-if(!knitr %in% installed.packages()){
+if(!"knitr" %in% installed.packages()){
   install.packages("knitr", repos='http://cran.us.r-project.org')
 }
-if(!xts %in% installed.packages()){
+if(!"xts" %in% installed.packages()){
   install.packages("xts", repos='http://cran.us.r-project.org')
 }
-if(!devtools %in% installed.packages()){
+if(!"devtools" %in% installed.packages()){
   install.packages("devtools", repos='http://cran.us.r-project.org')
 }
-if(!COPmod %in% installed.packages()){
+if(!"COPmod" %in% installed.packages()){
   devtools::install_github("troyhill/COPmod")
 }
-if(!here %in% installed.packages()){
+if(!"here" %in% installed.packages()){
   install.packages("here", repos='http://cran.us.r-project.org')
 }
 
-# library(COPMod)
+library(COPmod)
 
 ```
 
