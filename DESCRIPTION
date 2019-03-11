@@ -1,0 +1,25 @@
+Package: COPmod
+Type: Package
+Title: Implementation of a PCA approach to modeling flows into Everglades National Park
+Version: 0.0.1
+Authors@R: c(
+    person(c("Troy", "D."), "Hill", role = c("aut", "cre"), 
+    email = "Hill.Troy@gmail.com", comment = c(ORCID = "0000-0003-2980-4099")),
+    person()
+    )
+URL: https://github.com/troyhill/COPmod
+BugReports: https://github.com/troyhill/COPmod/issues
+Description: A usage example for COP.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Depends:
+    R (>= 3.0),
+    xts,
+    FactoMineR
+Suggests: 
+    devtools,
+    here,
+    knitr
+VignetteBuilder: knitr

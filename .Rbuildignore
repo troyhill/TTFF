@@ -1,0 +1,8 @@
+^codecov\.yml$
+^appveyor\.yml$
+^\.travis\.yml$
+^\.Rproj\.user$
+^docs$
+^appveyor\\.yml$
+^.*\.Rproj$
+^data\\a\.RData$

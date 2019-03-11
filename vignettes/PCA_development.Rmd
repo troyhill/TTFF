@@ -1,0 +1,107 @@
+---
+title: "PCA development"
+author: "Troy Hill"
+date: "March 11, 2019"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{COPmod}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+if(!require(knitr)){
+  install.packages("knitr", repos='http://cran.us.r-project.org')
+}
+if(!require(xts)){
+  install.packages("xts", repos='http://cran.us.r-project.org')
+}
+if(!require(devtools)){
+  install.packages("devtools", repos='http://cran.us.r-project.org')
+}
+if(!require(COPmod)){
+  devtools::install_github("/troyhill/COPmod")
+}
+if(!require(here)){
+  install.packages("here", repos='http://cran.us.r-project.org')
+}
+# if(!require(factoextra)){
+#   install.packages("factoextra", repos='http://cran.us.r-project.org')
+# }
+
+# library(COPMod)
+library(here)
+# library(factoextra)
+
+```
+
+## Merge data for period of record
+
+
+
+```{r compile data, include=TRUE, echo=TRUE, eval=FALSE}
+### generate data for period of record by compiling from tab-delimited .txt files
+rainDat  <- paste0(here(), "/inst/extdata/data_Daily_Rain.txt")
+PETDat   <- paste0(here(), "/inst/extdata/data_daily_PET.txt")
+stageDat <- paste0(here(), "/inst/extdata/data_ALT_output_stage.txt")
+flowDat  <- paste0(here(), "/inst/extdata/data_ALTO_output_Flows.txt")
+
+
+por <- mergeData(rainfall = rainDat, PET = PETDat, stage = stageDat, flow = flowDat)
+
+### the period of record object is supplied and documented with the COPmod package
+?COPmod::por
+```
+
+## Principal component analysis
+
+Implement PCA for 41-year period of record.
+
+```{r PCA on whole dataset, echo = TRUE}
+# Principal component analysis --------------------------------------------
+pca.dat <- por
+colsToUse <- 2:55 # columns to use for PCA (exclude date, Vero, sumFlow)
+
+pca1 <- FactoMineR::PCA(pca.dat[, colsToUse], 
+            ncp = 4, scale.unit = TRUE) 
+
+# correlations between explanatory variables and synthetic PCA dimensions
+FactoMineR::dimdesc(pca1, axes = 1:4)
+
+eigenvalues <- pca1$eig
+head(eigenvalues) # ~81% of the information in the data are captured in the first four principal components
+
+```
+### the object "pca1" can be applied to future data to generate principal components
+
+
+```{r apply PCA to new data, echo = TRUE}
+# Apply PCA to sample data --------------------------------------------
+
+# generate a dataset on which to apply the PCA
+newDat <- data.frame(por[sample(1:nrow(por), size = nrow(por)*0.3), ])
+
+pca.out <- data.frame(cbind(pca1$ind$coord, sumFlow = data.frame(por$sumFlow)))
+summary(pca.lm <- lm(sumFlow ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out))
+
+pcaPred <- FactoMineR::predict.PCA(pca1, newdata = newDat)
+testDat <- data.frame(pcaPred$coord, date = row.names(pcaPred$coord))
+  
+testDat$predFlow <- stats::coef(pca.lm)[1] + stats::coef(pca.lm)[2] * testDat$Dim.1 + 
+    stats::coef(pca.lm)[3] * testDat$Dim.2 + stats::coef(pca.lm)[4] * testDat$Dim.3 +  stats::coef(pca.lm)[5] * testDat$Dim.4
+  
+
+### this work is streamlined in the estimateFlow() function
+flowPredictions <- estimateFlow(newData = newDat, PCA_output = pca1, periodOfRecord = por)
+
+identical(flowPredictions, testDat$predFlow)  
+
+```
+
+
+### Out-of-sample testing
+
+```{r PCA on out-of-sample data, echo = TRUE}
+out2 <- bootstrapPCA(iter = 100, plot = FALSE, data = por, columnsUsed = colsToUse)
+summary(out2)
+```

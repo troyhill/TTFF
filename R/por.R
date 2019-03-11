@@ -1,0 +1,27 @@
+#' Data: rainfall, PET, stage, and flow data for the 41-year period of record (1965-2005)
+#'
+#' @description An xts object with 2139 rows and 56 columns. Data have been aggregated from daily to weekly time intervals.
+#'
+#' @format 56 columns appear in the dataset:
+#' \describe{
+#' \item{columns 1:17}{names of PET stations used}
+#' \item{columns 18:50}{names of rainfall stations used}
+#' \item{columns 51:55}{lagged flow data}
+#' \item{sumFlow}{the response variable: the sum of observed flows across Tamiami Trail}
+#'}
+#' @docType data
+#' @keywords rainfall PET stage flow
+#' @name por
+#' @examples 
+#' names(por)
+#' 
+#' \dontrun{
+#' ### code used to generate object:
+#' rainDat  <- paste0(here(), "/inst/extdata/data_Daily_Rain.txt")
+#' PETDat   <- paste0(here(), "/inst/extdata/data_daily_PET.txt")
+#' stageDat <- paste0(here(), "/inst/extdata/data_ALT_output_stage.txt")
+#' flowDat  <- paste0(here(), "/inst/extdata/data_ALTO_output_Flows.txt")
+#' por <- mergeData(rainfall = rainDat, PET = PETDat, stage = stageDat, flow = flowDat)
+#' }
+#' 
+"por"
