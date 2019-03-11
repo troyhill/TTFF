@@ -1,0 +1,128 @@
+---
+title: "Principal component analysis"
+author: "Troy Hill"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Principal component analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+if(!"knitr" %in% installed.packages()){
+  install.packages("knitr", repos='http://cran.us.r-project.org')
+}
+if(!"xts" %in% installed.packages()){
+  install.packages("xts", repos='http://cran.us.r-project.org')
+}
+if(!"devtools" %in% installed.packages()){
+  install.packages("devtools", repos='http://cran.us.r-project.org')
+}
+if(!"COPmod" %in% installed.packages()){
+  devtools::install_github("troyhill/COPmod")
+}
+if(!"here" %in% installed.packages()){
+  install.packages("here", repos='http://cran.us.r-project.org')
+}
+
+library(COPmod)
+
+```
+
+This document describes a possible alternative to the COP rainfall formula used to predict flows. A problem with the current approach is the substantial number of correlations among the 54 independent variables included. Principal component analysis is offered as a way to remove multicollinearity and reduce the dimensionality of the dataset while retaining all of the original variables and the information they provide. 
+
+Principal component analysis (PCA) is one approach to reducing many variables to a few synthetic variables that are linear combinations of the original inputs (scaled to mean = 0). Importantly for our case, redundancy in the input parameters is of no consequence for the synthetic variables produced.
+
+
+## Merging data for the period of record
+
+To prepare the 41-year COP dataset for PCA, daily input data provided by the South Florida Water Management District were aggregated to weekly data. Mean values were used for stage, while sums were used for PET, rainfall, and lagged flows.
+
+
+
+```{r compile data, include=TRUE, echo=TRUE, eval=FALSE}
+### generate data for period of record by compiling from tab-delimited .txt files
+rainDat  <- paste0(here(), "/inst/extdata/data_Daily_Rain.txt")
+PETDat   <- paste0(here(), "/inst/extdata/data_daily_PET.txt")
+stageDat <- paste0(here(), "/inst/extdata/data_ALT_output_stage.txt")
+flowDat  <- paste0(here(), "/inst/extdata/data_ALTO_output_Flows.txt")
+
+
+por <- mergeData(rainfall = rainDat, PET = PETDat, 
+                 stage = stageDat, flow = flowDat)
+
+### the merged data is supplied and documented with the COPmod package
+?COPmod::por
+```
+
+## Principal component analysis
+ 
+Applying PCA to the 54-variable COP input dataset shows that 81% of the variation in the dataset can be captured by four synthetic variables (Fig. 2; left panel). These dimensions generally reflect common variables. For example, dimensions 1 and 4 were dominated by PET, dimension 2 is dominated by rainfall, and dimension 3 is dominated by lagged flow data. 
+
+
+
+```{r PCA on whole dataset, echo = TRUE, fig.width = 4.5, fig.height = 4}
+# Principal component analysis --------------------------------------------
+pca.dat <- por
+colsToUse <- 2:55 # columns to use for PCA (exclude date, Vero, sumFlow)
+
+pca1 <- FactoMineR::PCA(pca.dat[, colsToUse], graph = FALSE,
+            ncp = 4, scale.unit = TRUE) 
+
+head(pca1$eig[, c(2,3)]) # ~81% of the variance in the data is captured in the first four principal components
+
+```
+
+
+```{r Plot PCA, echo = FALSE, fig.width = 4.5, fig.height = 4, fig.cap = "Figure 1. A biplot of PCA dimensions 1 and 2, where each arrow represents a single variable (e.g., a PET station). Lagged flows cluster in the lower left quadrant, PET stations and stages are clustered in the lower right quadrant, and rainfall stations cluster in the upper right quadrant."}
+
+plot(pca1, choix="var", title = "")
+```
+
+
+The PCA output can then be applied to future data to generate principal components
+
+
+```{r apply PCA to new data, echo = TRUE}
+# Apply PCA to sample data --------------------------------------------
+
+# generate a dataset on which to apply the PCA
+newDat <- data.frame(por[sample(1:nrow(por), size = nrow(por)*0.3), ])
+
+pca.out <- data.frame(cbind(pca1$ind$coord, 
+                            sumFlow = data.frame(por$sumFlow)))
+pca.lm <- lm(sumFlow ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out)
+
+pcaPred <- FactoMineR::predict.PCA(pca1, newdata = newDat)
+testDat <- data.frame(pcaPred$coord, date = row.names(pcaPred$coord))
+  
+testDat$predFlow <- stats::coef(pca.lm)[1] + 
+    stats::coef(pca.lm)[2] * testDat$Dim.1 + 
+    stats::coef(pca.lm)[3] * testDat$Dim.2 + 
+    stats::coef(pca.lm)[4] * testDat$Dim.3 +  
+    stats::coef(pca.lm)[5] * testDat$Dim.4
+  
+
+### this work is streamlined in the estimateFlow() function
+flowPredictions <- estimateFlow(newData = newDat, PCA_output = pca1, 
+                                periodOfRecord = por)
+
+```
+
+
+### Out-of-sample flow prediction
+
+
+To examine the performance of the PCA approach, the input data were randomly classified as training (80%) and test (20%) data. PCA was performed on the training dataset and applied to the test dataset, then used to predict flows in the test data. This process (randomized assignment, PCA, application to test data, discharge prediction) was repeated 100 times. In this bootstrapped approach, observed flows were estimated well by PCA-predicted flows, with an average pearson correlation coefficient of 0.92 (*r2* = 0.84).
+
+
+```{r PCA on out-of-sample data, echo = TRUE}
+out2 <- bootstrapPCA(iter = 100, plot = FALSE, data = por, columnsUsed = colsToUse)
+summary(out2)
+```
+
+
+```{r Plot out-of-sample comparison, echo = FALSE, fig.width = 4.5, fig.height = 4, fig.cap = "Figure 2. Relationship between predicted and observed flow in a test dataset, following application of a PCA based on a training dataset. Blue line shows line of best fit from a model of square-root transformed predicted flows. This approach estimates observed flows with an R2 = 0.84."}
+bootstrapPCA(iter = 1, plot = TRUE, data = por, columnsUsed = colsToUse)
+```
