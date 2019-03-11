@@ -2,11 +2,11 @@
 title: "PCA development"
 author: "Troy Hill"
 date: "March 11, 2019"
-output: html_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{PCA development}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf-8]{inputenc}
+  %\usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
