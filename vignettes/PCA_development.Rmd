@@ -4,9 +4,9 @@ author: "Troy Hill"
 date: "March 11, 2019"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{COPmod}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[UTF-8]{inputenc}
+  %\VignetteIndexEntry{PCA development}
+  %\VignetteEngine{knitr::knitr}
+  %\usepackage[utf-8]{inputenc}
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
