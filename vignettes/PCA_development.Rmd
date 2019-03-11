@@ -5,7 +5,7 @@ date: "March 11, 2019"
 output: html_document
 vignette: >
   %\VignetteIndexEntry{PCA development}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf-8]{inputenc}
 ---
 
