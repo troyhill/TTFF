@@ -12,7 +12,7 @@
 #'}
 #' @docType data
 #' @keywords rainfall PET stage flow
-#' @name por
+#' @name pca1
 #' @examples 
 #' summary(pca1)
 #' 
