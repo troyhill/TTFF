@@ -22,9 +22,6 @@ if(!"devtools" %in% installed.packages()){
 if(!"COPmod" %in% installed.packages()){
   devtools::install_github("troyhill/COPmod")
 }
-if(!"here" %in% installed.packages()){
-  install.packages("here", repos='http://cran.us.r-project.org')
-}
 
 library(COPmod)
 
@@ -43,10 +40,10 @@ To prepare the 41-year COP dataset for PCA, daily input data provided by the Sou
 
 ```{r compile data, include=TRUE, echo=TRUE, eval=FALSE}
 ### generate data for period of record by compiling from tab-delimited .txt files
-rainDat  <- paste0(here(), "/inst/extdata/data_Daily_Rain.txt")
-PETDat   <- paste0(here(), "/inst/extdata/data_daily_PET.txt")
-stageDat <- paste0(here(), "/inst/extdata/data_ALT_output_stage.txt")
-flowDat  <- paste0(here(), "/inst/extdata/data_ALTO_output_Flows.txt")
+rainDat  <- system.file("extdata", "data_Daily_Rain.txt", package = "COPmod")
+PETDat   <- system.file("extdata", "data_daily_PET.txt", package = "COPmod")
+stageDat <- system.file("extdata", "data_ALT_output_stage.txt", package = "COPmod")
+flowDat  <- system.file("extdata", "data_ALTO_output_Flows.txt", package = "COPmod") 
 
 
 por <- mergeData(rainfall = rainDat, PET = PETDat, 
