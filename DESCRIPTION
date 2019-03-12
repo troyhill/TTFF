@@ -20,7 +20,6 @@ Depends:
     FactoMineR
 Suggests: 
     devtools,
-    here,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
