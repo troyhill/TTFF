@@ -52,15 +52,15 @@ Coefficients and associated standard errors:
 
 A two-variable segmented regression model has also been proposed. The data used in the model are stages in northeast Shark River Slough and WCA3A, with data breakpoints set where stages in northeast Shark River Slough reach 7.0' and 7.9' NGVD. This model follows the form: 
 
-Q = B<sub>0</sub> + B1 * S^WCA3A + B2 * S^NESRS for x < 7.0
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>2</sub> * S<sup>NESRS</sup> for x < 7.0
 
-Q = B<sub>0</sub> + B1 * S^WCA3A + B3 * S^NESRS for 7.0 < x < 7.9 
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>3</sub> * S<sup>NESRS</sup> for 7.0 < x < 7.9 
 
-Q = B<sub>0</sub> + B1 * S^WCA3A + B4 * S^NESRS for x > 7.9
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>4</sub> * S<sup>NESRS</sup> for x > 7.9
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B<sub>0</sub>	  | B1	   | B2	   | B3	 | B4  
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub>  
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
 | Coefficient	   | -3625.80   |  451.00 | 12.33  | 869.79 | 2132.31 |
 | Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
@@ -86,17 +86,19 @@ The PCA equation for the period of record has the following form:
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B0	  | B1	   | B2	   | B3	 | B4  
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub>  
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
 | Coefficient	   | 15177.31   | -176.01  | -1032.68 | 6255.03 | 427.15 |
 | Standard Error | 128.37 | 26.58 | 33.05	 | 72.68 | 90.22 |
 
 
+&nbsp;
+
 The final flow prediction is based on a square-root transformation of the PCA prediction:
 
-Q = B<sub>0</sub> + B1 * sqrt(Q<sub>pred</sub>)
+Q = B<sub>0</sub> + B<sub>1</sub> * sqrt(Q<sub>pred</sub>)
 
-| Parameter	     | B0	  | B1	   | 
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | 
 | :---           | :----:  | ---: | 
 | Coefficient	   | -19828.2 | 298.40 |
 | Standard Error | 631.55 | 5.15 |
