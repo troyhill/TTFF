@@ -5,10 +5,13 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 
 This formula operates on a subset of available rainfall, precipitation, and PET stations and has the form: 
 
+<!---
+
 [comment]: <>(formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input "Q_{t}^{sum}  =  \beta_{1}    \ast  S_{t}^{avg1}  +  \beta_{2}    \ast    S_{t}^{nesrs2} + \beta_{3}   \ast Q_{t-1}^{sum}  + \beta_{4}   \ast R_{t}^{avg}  + \beta_{5}   \ast PET_{t} + \beta_{6}   \ast ZA_{t}")
 
+-->
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%20%3D%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20S_%7Bt%7D%5E%7Bavg1%7D%20%20%2B%20%20%5Cbeta_%7B2%7D%20%20%20%20%5Cast%20%20%20%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20R_%7Bt%7D%5E%7Bavg%7D%20%20%2B%20%5Cbeta_%7B5%7D%20%20%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%20%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%3D%20%5Cbeta_%7B1%7D%20%5Cast%20S_%7Bt%7D%5E%7Bavg1%7D%20%2B%20%5Cbeta_%7B2%7D%20%5Cast%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%2B%20%5Cbeta_%7B4%7D%20%5Cast%20R_%7Bt%7D%5E%7Bavg%7D%20%2B%20%5Cbeta_%7B5%7D%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
  
 
 where:
@@ -46,7 +49,11 @@ A segmented regression model has also been proposed. The model uses breakpoints 
 
 This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. 
 
+<!---
+
 [comment]: <> (formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input  " Q_{t}^{sum}  =  \sqrt{ \beta_{0} +  \beta_{1}    \ast    PC1 + \beta_{2}   \ast PC2  + \beta_{3}   \ast PC3  + \beta_{4}   \ast PC4 }")
+
+-->
 
 ![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%20%3D%20%20%5Csqrt%7B%20%5Cbeta_%7B0%7D%20%2B%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20%20%20PC1%20%2B%20%5Cbeta_%7B2%7D%20%20%20%5Cast%20PC2%20%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20PC3%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20PC4%20%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
