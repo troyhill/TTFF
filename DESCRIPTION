@@ -1,7 +1,7 @@
-Package: COPmod
+Package: TTFF
 Type: Package
-Title: Implementation of a PCA approach to modeling flows into Everglades National Park
-Version: 0.0.1
+Title: A comparison of multiple versions of the Tamiami Trail Flow Formula
+Version: 0.0.2
 Authors@R: c(
     person(c("Troy", "D."), "Hill", role = c("aut", "cre"), 
     email = "Hill.Troy@gmail.com", comment = c(ORCID = "0000-0003-2980-4099")),
@@ -9,7 +9,7 @@ Authors@R: c(
     )
 URL: https://github.com/troyhill/COPmod
 BugReports: https://github.com/troyhill/COPmod/issues
-Description: A usage example for COP.
+Description: A usage example for the Combined Operational Plan.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

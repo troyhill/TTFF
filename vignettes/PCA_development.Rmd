@@ -19,11 +19,11 @@ if(!"xts" %in% installed.packages()){
 if(!"devtools" %in% installed.packages()){
   install.packages("devtools", repos='http://cran.us.r-project.org')
 }
-if(!"COPmod" %in% installed.packages()){
-  devtools::install_github("troyhill/COPmod")
+if(!"TTFF" %in% installed.packages()){
+  devtools::install_github("troyhill/TTFF")
 }
 
-library(COPmod)
+library(TTFF)
 
 ```
 
