@@ -39,10 +39,20 @@ Coefficients and associated standard errors:
 
 
 
-## 2. Segmented regression
+## 2. Segmented multiple linear regression
 
-A segmented regression model has also been proposed. The model uses breakpoints defined by stages in northeast Shark River Slough of 7.0' and 7.9'. 
+A two-variable segmented regression model has also been proposed. The data used in the model are stages in northeast Shark River Slough and WCA3A, with data breakpoints set where stages in northeast Shark River Slough reach 7.0' and 7.9' NGVD. This model follows the form: 
 
+Q = B0 + B1 * S^WCA3A + B2 * S^NESRS for x < 7.0
+Q = B0 + B1 * S^WCA3A + B3 * S^NESRS for 7.0 < x < 7.9 
+Q = B0 + B1 * S^WCA3A + B4 * S^NESRS for x > 7.9
+
+Coefficients and associated standard errors:
+
+| Parameter	     | B0	  | B1	   | B2	   | B3	 | B4  
+| :---           | :----:  | :----: |  :----: |  :----: | ---: | 
+| Coefficient	   | -3625.80   |  451.00 | 12.33  | 869.79 | 2132.31 |
+| Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
 
 
 ## 3. Principal component analysis 
@@ -61,8 +71,8 @@ Coefficients and associated standard errors:
 
 | Parameter	     | B0	  | B1	   | B2	   | B3	 | B4  
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
-| Coefficient	   | 0	   | 0  | -44.62  | 0.644 | -221.79 |
-| Standard Error | 0	   | 18.22	  | 18.50	 | 28.83  | 13.67 |
+| Coefficient	   | .   | .  | .  | . | . |
+| Standard Error | .	   | .	  | .	 | .  | . |
 
 
 
