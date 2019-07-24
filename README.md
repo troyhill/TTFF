@@ -25,11 +25,10 @@ ZAt is the Zone A regulation stage (ft, NGVD) value for time step t (beginning o
 
 Coefficients and associated standard errors:
 
-Parameter	      B1	    B2	    B3	  B4    B5      B6
-
-Coefficient	    318.42  -44.62  0.644 24.32 -96.31  -221.79
-
-Standard Error  18.22	  18.50	  0.016 7.23  28.83   13.67
+| Parameter	     | B1	   | B2	   | B3	 | B4   | B5     | B6 |
+| :---            | :----: |  :----: |  :----: |  :----: |  ---: | 
+| Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
+| Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
 
 
 
