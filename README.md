@@ -1,5 +1,10 @@
 # Tamiami Trail Flow Formula 
+
 The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiami Trail. This page and the accompanying R package compare different approaches to modeling flow. The approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. The specific approaches included here are detailed below:
+
+&nbsp;
+
+&nbsp;
 
 ## 1. Multiple linear regression
 
@@ -16,19 +21,19 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 where:
 
-Q_t^sum is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
+![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
 
-S_t^avg1 is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
+![equation](http://www.sciweavers.org/tex2img.php?eq=S_%7Bt%7D%5E%7Bavg1%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
 
-S_t^nesrs2 are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
+![equation](http://www.sciweavers.org/tex2img.php?eq=S_%7Bt%7D%5E%7Bnesrs2%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
-Q_(t-1)^sum is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
+![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt-1%7D%5E%7Bsum%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
 
-R_t^avg is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
+![equation](http://www.sciweavers.org/tex2img.php?eq=R_%7Bt%7D%5E%7Bavg%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
-PET_t^1 is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
+![equation](http://www.sciweavers.org/tex2img.php?eq=PET_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
 
-ZAt is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
+![equation](http://www.sciweavers.org/tex2img.php?eq=ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
 
 Coefficients and associated standard errors:
 
@@ -37,6 +42,10 @@ Coefficients and associated standard errors:
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
 
+
+&nbsp;
+
+&nbsp;
 
 
 ## 2. Segmented multiple linear regression
@@ -55,9 +64,15 @@ Coefficients and associated standard errors:
 | Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
 
 
+&nbsp;
+
+&nbsp;
+
 ## 3. Principal component analysis 
 
-This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. 
+This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. The PCA approach has two stages; first, PCA is applied to generate an initial flow estimate, which is then square-root transformed to generate a final estimate.
+
+The PCA equation for the period of record has the following form:
 
 <!---
 
@@ -75,6 +90,12 @@ Coefficients and associated standard errors:
 | Standard Error | .	   | .	  | .	 | .  | . |
 
 
+ 
+
+
+&nbsp;
+
+&nbsp;
 
 
 ## R package installation and usage
