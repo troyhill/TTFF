@@ -1,5 +1,8 @@
-# COPmod
-Implementation of a PCA approach to modeling flows into Everglades National Park
+# Tamiami Trail Flow Formula 
+A comparison of multiple approaches to modeling flow across the Tamiami Trail
+
+
+
 
 
 # Installation and usage
