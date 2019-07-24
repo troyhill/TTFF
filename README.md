@@ -9,7 +9,7 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 
 ![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%20%3D%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20S_%7Bt%7D%5E%7Bavg1%7D%20%20%2B%20%20%5Cbeta_%7B2%7D%20%20%20%20%5Cast%20%20%20%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20R_%7Bt%7D%5E%7Bavg%7D%20%20%2B%20%5Cbeta_%7B5%7D%20%20%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%20%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
-
+ 
 
 where:
 
