@@ -21,23 +21,23 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 where:
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
+Q<sub>t</sub><sup>sum</sup> is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=S_%7Bt%7D%5E%7Bavg1%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
+S<sub>t</sub><sup>avg1</sup> is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=S_%7Bt%7D%5E%7Bnesrs2%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
+S<sub>t</sub><sup>nesrs2</sup> are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt-1%7D%5E%7Bsum%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
+Q<sub>t-1</sub> is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=R_%7Bt%7D%5E%7Bavg%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
+R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=PET_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
+PET<sub>t</sub>  is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0) is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
+ZA<sub>t</sub> is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B1	   | B2	   | B3	 | B4   | B5     | B6 |
+|| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> | B<sub>5</sub>      | B<sub>6</sub>  |
 | :---            | :----: |  :----: |  :----: |  :----: |  ---: | 
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
@@ -60,7 +60,7 @@ Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>4</sub> * S<sup>NE
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub>  
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub>  | 
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
 | Coefficient	   | -3625.80   |  451.00 | 12.33  | 869.79 | 2132.31 |
 | Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
@@ -86,7 +86,7 @@ The PCA equation for the period of record has the following form:
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub>  
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> |  
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
 | Coefficient	   | 15177.31   | -176.01  | -1032.68 | 6255.03 | 427.15 |
 | Standard Error | 128.37 | 26.58 | 33.05	 | 72.68 | 90.22 |
