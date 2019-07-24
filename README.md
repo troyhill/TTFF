@@ -52,11 +52,11 @@ Coefficients and associated standard errors:
 
 A two-variable segmented regression model has also been proposed. The data used in the model are stages in northeast Shark River Slough and WCA3A, with data breakpoints set where stages in northeast Shark River Slough reach 7.0' and 7.9' NGVD. This model follows the form: 
 
-Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>2</sub> * S<sup>NESRS</sup> for x < 7.0
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>2</sub> * S<sup>NESRS</sup> for S<sup>NESRS</sup> < 7.0
 
-Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>3</sub> * S<sup>NESRS</sup> for 7.0 < x < 7.9 
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>3</sub> * S<sup>NESRS</sup> for 7.0 < S<sup>NESRS</sup> < 7.9 
 
-Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>4</sub> * S<sup>NESRS</sup> for x > 7.9
+Q = B<sub>0</sub> + B<sub>1</sub> * S<sup>WCA3A</sup> + B<sub>4</sub> * S<sup>NESRS</sup> for S<sup>NESRS</sup> > 7.9
 
 Coefficients and associated standard errors:
 
