@@ -96,7 +96,7 @@ Coefficients and associated standard errors:
 
 The final flow prediction is based on a square-root transformation of the PCA prediction:
 
-Q = B<sub>0</sub> + B<sub>1</sub> * sqrt(Q<sub>pred</sub>)
+Q = B<sub>0</sub> + B<sub>1</sub> * Q<sub>pred</sub><sup>1/2</sup>
 
 | Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | 
 | :---           | :----:  | ---: | 
