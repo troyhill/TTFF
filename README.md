@@ -1,7 +1,7 @@
 # Tamiami Trail Flow Formula 
 The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiami Trail. This page and the accompanying R package compare different approaches to modeling flow. The approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. The specific approaches included here are:
 
-1. Multiple linear regression
+## 1. Multiple linear regression
 
 This formula takes the form: 
 
@@ -26,18 +26,22 @@ ZAt is the Zone A regulation stage (ft, NGVD) value for time step t (beginning o
 Coefficients and associated standard errors:
 
 | Parameter	     | B1	   | B2	   | B3	 | B4   | B5     | B6 |
+
 | :---            | :----: |  :----: |  :----: |  :----: |  ---: | 
+
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
+
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
 
 
 
-# Installation and usage
 
-'COPmod' can be installed from GitHub:
+## R package installation and usage
+
+The R package containing data and sample analysis can be installed from GitHub:
 
 
 ```
 install.packages("devtools")
-devtools::install_github("troyhill/COPmod")
+devtools::install_github("troyhill/TTFF")
 ```
