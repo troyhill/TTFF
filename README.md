@@ -4,8 +4,6 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 1. Multiple linear regression
 
 This formula takes the form: 
-![equation](http://www.sciweavers.org/tex2img.php?eq=%20Q_%7Bt%7D%5E%7Bsum%7D%20%20%3D%20%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20%20%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20R_%7Bt%7D%5E%7BAvg%7D%20%20%2B%20%5Cbeta_%7B5%7D%20%20%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%20%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
-
 
 ![equation](http://www.sciweavers.org/tex2img.php?eq=%20Q_%7Bt%7D%5E%7Bsum%7D%20%20%3D%20%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20%20%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20R_%7Bt%7D%5E%7BAvg%7D%20%20%2B%20%5Cbeta_%7B5%7D%20%20%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%20%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
@@ -25,10 +23,10 @@ PET_t^1 is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX),
 
 ZAt is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
 
-TTFF coefficients and associated standard errors:
-Parameter	S_t^avg1	S_t^nesrs2	Q_(t-1)^sum	R_t^avg	〖PET〗_t^1	ZA_t
-Coefficient	318.42	-44.62	0.644	24.32	-96.31	-221.79
-Standard Error 	18.22	18.50	0.016	7.23	28.83	13.67
+Coefficients and associated standard errors:
+Parameter	      B1	    B2	    B3	  B4    B5      B6
+Coefficient	    318.42  -44.62  0.644 24.32 -96.31  -221.79
+Standard Error  18.22	  18.50	  0.016 7.23  28.83   13.67
 
 
 
