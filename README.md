@@ -9,11 +9,17 @@ This formula takes the form:
 
 where;
 Q_t^sum is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
- S_t^avg1 is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
+
+S_t^avg1 is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
+
 S_t^nesrs2 are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
+
 Q_(t-1)^sum is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
+
 R_t^avg is the average weekly rainfall (in) for the entire WCA3A and BCNP.  (Figure X.X) for current week t (see map),
+
 PET_t^1 is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
+
 ZAt is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
 
 TTFF coefficients and associated standard errors:
