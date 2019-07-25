@@ -13,7 +13,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 
 ![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFF_estimates.png "TTFF estimates")
 
-<img src="inst/figures/TTFF_estimates.png" alt="hi" class="inline"/>
+<img src="https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFF_estimates.png" alt="hi" class="inline"/>
 
 &nbsp;
 
