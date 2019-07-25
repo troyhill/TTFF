@@ -8,7 +8,14 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 
 ## Current values:
 
-![alt text](https://github.com/troyhill/TTFF/inst/figures/TTFF_estimates.png "TTFF estimates")
+
+&nbsp;
+
+![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFF_estimates.png "TTFF estimates")
+
+<img src="https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFF_estimates.png" alt="hi" class="inline"/>
+
+<img src="{{url}}/inst/figures/TTFF_estimates.png" style="display: block; margin: auto;" />
 
 &nbsp;
 
@@ -36,7 +43,9 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 -->
 
 
-![alt text](https://github.com/troyhill/TTFF/inst/figures/eq1.png "multiple regression formula")
+&nbsp;
+            
+![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/eq1.png "multiple regression formula")
 
 
 &nbsp;
@@ -60,7 +69,7 @@ ZA<sub>t</sub> is the Zone A regulation stage (ft, NGVD) value for time step t (
 Coefficients and associated standard errors:
 
 | Parameter	    | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> | B<sub>5</sub>      | B<sub>6</sub>  |
-| :---            | :----: |  :----: |  :----: |  :----: |  ---: | 
+| :---        | :----:     | :----: |  :----: |  :----: |  :----: |  ---: | 
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
 
@@ -108,7 +117,7 @@ The PCA equation for the period of record has the following form:
 -->
 
 
-![alt text](https://github.com/troyhill/TTFF/inst/figures/eq_PCA.png "PCA formula")
+![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/eq_PCA.png "PCA formula")
 
 
 &nbsp;
