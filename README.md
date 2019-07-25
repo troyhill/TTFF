@@ -1,12 +1,12 @@
-# Tamiami Trail Flow Formula 
+# Estimating flow across Tamiami Trail
 
-The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiami Trail. This page and the accompanying R package compare different approaches to modeling flow. The approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. Estimates from each model for the current week are shown immediately below, and the individual approaches are described below.
-
-&nbsp;
+The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving across Tamiami Trail through three water management structures: S12C, S12D, and S333. This page and the accompanying R package compare different approaches to modeling flow. These approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
 
 &nbsp;
 
-## Current values:
+&nbsp;
+
+## Current model values:
 
 
 &nbsp;
