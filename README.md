@@ -11,9 +11,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 
 &nbsp;
 
-![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFFestimates.png "TTFF estimates")
-
-<img src="https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFFestimates.png" alt="hi" class="inline"/>
+![](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFFestimates.png "TTFF estimates")
 
 <img src="{{site.url}}/inst/figures/TTFFestimates.png" style="display: block; margin: auto;" />
 
@@ -45,7 +43,9 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 &nbsp;
             
-![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/eq1.png "multiple regression formula")
+![](https://github.com/troyhill/TTFF/blob/master/inst/figures/eq1.png "multiple regression formula")
+
+<img src="{{site.url}}/inst/figures/eq1.png" style="display: block; margin: auto;" />
 
 
 &nbsp;
@@ -117,7 +117,10 @@ The PCA equation for the period of record has the following form:
 -->
 
 
-![alt text](https://github.com/troyhill/TTFF/blob/master/inst/figures/eqPCA.png "PCA formula")
+![](https://github.com/troyhill/TTFF/blob/master/inst/figures/eqPCA.png "PCA formula")
+
+<img src="{{site.url}}/inst/figures/eqPCA.png" style="display: block; margin: auto;" />
+
 
 
 &nbsp;
