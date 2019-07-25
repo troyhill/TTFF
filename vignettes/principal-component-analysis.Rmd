@@ -88,11 +88,13 @@ The PCA output can then be applied to future data to generate principal componen
 # Apply PCA to sample data --------------------------------------------
 
 # generate a dataset on which to apply the PCA
-newDat <- data.frame(por[sample(1:nrow(por), size = nrow(por)*0.3), ])
+newDat   <- data.frame(por[sample(1:nrow(por), size = nrow(por)*0.3), ])
 
-pca.out <- data.frame(cbind(pca1$ind$coord, 
+pca.out  <- data.frame(cbind(pca1$ind$coord, 
                             sumFlow = data.frame(por$sumFlow)))
-pca.lm <- lm(sumFlow ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out)
+pca.lm   <- lm(sumFlow ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out)
+# pca.sqrt <- lm(I((sumFlow)^2) ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out)
+
 
 pcaPred <- FactoMineR::predict.PCA(pca1, newdata = newDat)
 testDat <- data.frame(pcaPred$coord, date = row.names(pcaPred$coord))
@@ -102,11 +104,17 @@ testDat$predFlow <- stats::coef(pca.lm)[1] +
     stats::coef(pca.lm)[3] * testDat$Dim.2 + 
     stats::coef(pca.lm)[4] * testDat$Dim.3 +  
     stats::coef(pca.lm)[5] * testDat$Dim.4
-  
+
+# testDat$predFlow.sqrt <- sqrt(testDat$predFlow)
+# 
+# plot(predFlow.sqrt, sumFlow,  test[test$sumFlow > 0, ])
+#  summary(lm1 <- stats::lm(sumFlow ~ I(sqrt(predFlow)), data = test[test$sumFlow > 0, ]))
 
 ### this work is streamlined in the estimateFlow() function
-flowPredictions <- estimateFlow(newData = newDat, PCA_output = pca1, 
+newDat$flowPredictions <- estimateFlow(newData = newDat, PCA_output = pca1, 
                                 periodOfRecord = por)
+
+summary(lm1 <- stats::lm(sumFlow ~ I(sqrt(flowPredictions)), data = newDat[newDat$sumFlow > 0, ]))
 
 ```
 
