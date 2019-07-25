@@ -1,6 +1,6 @@
 Package: TTFF
 Type: Package
-Title: A comparison of multiple versions of the Tamiami Trail Flow Formula
+Title: A comparison of multiple versions of the Tamiami Trail Flow Formula.
 Version: 0.0.2
 Authors@R: c(
     person(c("Troy", "D."), "Hill", role = c("aut", "cre"), 
