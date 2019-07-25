@@ -65,7 +65,7 @@ ZA<sub>t</sub> is the Zone A regulation stage (ft, NGVD) value for time step t (
 Coefficients and associated standard errors:
 
 | Parameter	    | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> | B<sub>5</sub>      | B<sub>6</sub>  |
-| :---            | :----: |  :----: |  :----: |  :----: |  ---: | 
+| :---        | :----:     | :----: |  :----: |  :----: |  :----: |  ---: | 
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
 
