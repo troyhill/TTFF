@@ -1,10 +1,26 @@
 # Tamiami Trail Flow Formula 
 
-The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiami Trail. This page and the accompanying R package compare different approaches to modeling flow. The approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. The specific approaches included here are detailed below:
+The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiami Trail. This page and the accompanying R package compare different approaches to modeling flow. The approaches use data from a network of stage, potential ET (PET), and rainfall gauges in WCA 3A and Everglades National Park. Estimates from each model for the current week are shown immediately below, and the individual approaches are described below.
 
 &nbsp;
 
 &nbsp;
+
+## Current values:
+
+![alt text](https://github.com/troyhill/TTFF/inst/figures/TTFF_estimates.png "TTFF estimates")
+
+&nbsp;
+
+Figure 1. Observed weekly flow through S333, S12C, and S12D during the past 9 months (black line). Flow estimates for the current week are shown in red (multiple linear regression model) and blue (segmented regression model). 
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
 
 ## 1. Multiple linear regression
 
@@ -14,10 +30,16 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 [comment]: <>(formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input "Q_{t}^{sum}  =  \beta_{1}    \ast  S_{t}^{avg1}  +  \beta_{2}    \ast    S_{t}^{nesrs2} + \beta_{3}   \ast Q_{t-1}^{sum}  + \beta_{4}   \ast R_{t}^{avg}  + \beta_{5}   \ast PET_{t} + \beta_{6}   \ast ZA_{t}")
 
+![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%3D%20%5Cbeta_%7B1%7D%20%5Cast%20S_%7Bt%7D%5E%7Bavg1%7D%20%2B%20%5Cbeta_%7B2%7D%20%5Cast%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%2B%20%5Cbeta_%7B4%7D%20%5Cast%20R_%7Bt%7D%5E%7Bavg%7D%20%2B%20%5Cbeta_%7B5%7D%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+
+
 -->
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bt%7D%5E%7Bsum%7D%20%3D%20%5Cbeta_%7B1%7D%20%5Cast%20S_%7Bt%7D%5E%7Bavg1%7D%20%2B%20%5Cbeta_%7B2%7D%20%5Cast%20S_%7Bt%7D%5E%7Bnesrs2%7D%20%2B%20%5Cbeta_%7B3%7D%20%5Cast%20Q_%7Bt-1%7D%5E%7Bsum%7D%20%2B%20%5Cbeta_%7B4%7D%20%5Cast%20R_%7Bt%7D%5E%7Bavg%7D%20%2B%20%5Cbeta_%7B5%7D%20%5Cast%20PET_%7Bt%7D%20%2B%20%5Cbeta_%7B6%7D%20%5Cast%20ZA_%7Bt%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
- 
+
+![alt text](https://github.com/troyhill/TTFF/inst/figures/eq1.png "multiple regression formula")
+
+
+&nbsp;
 
 where:
 
@@ -80,9 +102,17 @@ The PCA equation for the period of record has the following form:
 
 [comment]: <> (formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input  " Q_{pred}  =  \beta_{0} +  \beta_{1}    \ast    PC1 + \beta_{2}   \ast PC2  + \beta_{3}   \ast PC3  + \beta_{4}   \ast PC4 ")
 
--->
 
 ![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bpred%7D%20%20%3D%20%20%5Cbeta_%7B0%7D%20%2B%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20%20%20PC1%20%2B%20%5Cbeta_%7B2%7D%20%20%20%5Cast%20PC2%20%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20PC3%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20PC4%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+
+-->
+
+
+![alt text](https://github.com/troyhill/TTFF/inst/figures/eq_PCA.png "PCA formula")
+
+
+&nbsp;
+
 
 Coefficients and associated standard errors:
 
