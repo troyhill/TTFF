@@ -15,6 +15,8 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets across Tamiam
 
 <img src="https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFF_estimates.png" alt="hi" class="inline"/>
 
+<img src="{{site.url}}/inst/figures/TTFF_estimates.png" style="display: block; margin: auto;" />
+
 &nbsp;
 
 Figure 1. Observed weekly flow through S333, S12C, and S12D during the past 9 months (black line). Flow estimates for the current week are shown in red (multiple linear regression model) and blue (segmented regression model). 
