@@ -32,9 +32,11 @@ Figure 1. Observed weekly flow through S333, S12C, and S12D during the past 9 mo
 
 &nbsp;
 
+## Model descriptions
 
+&nbsp;
 
-## 1. Multiple linear regression
+### 1. Multiple linear regression
 
 This formula operates on a subset of available rainfall, precipitation, and PET stations and has the form: 
 
@@ -94,7 +96,7 @@ Coefficients and associated standard errors:
 &nbsp;
 
 
-## 2. Segmented multiple linear regression
+### 2. Segmented multiple linear regression
 
 A two-variable segmented regression model has also been proposed. The data used in the model are stages in northeast Shark River Slough and WCA3A, with data breakpoints set where stages in northeast Shark River Slough reach 7.0' and 7.9' NGVD. This model follows the form: 
 
@@ -116,7 +118,7 @@ Coefficients and associated standard errors:
 
 &nbsp;
 
-## 3. Principal component analysis 
+### 3. Principal component analysis 
 
 This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. The PCA approach has two stages; first, PCA is applied to generate an initial flow estimate, which is then square-root transformed to generate a final estimate.
 
