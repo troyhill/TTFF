@@ -8,3 +8,4 @@
 ^appveyor\\.yml$
 ^.*\.Rproj$
 ^data\\a\.RData$
+^\.httr-oauth$
