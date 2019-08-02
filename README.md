@@ -1,5 +1,3 @@
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/troyhill/TTFF?branch=master&svg=true)](https://ci.appveyor.com/project/troyhill/TTFF) [![Build Status](https://travis-ci.org/troyhill/TTFF.svg?branch=master)](https://travis-ci.org/troyhill/TTFF) 
-
 
 # Estimating flow across Tamiami Trail
 
@@ -182,3 +180,6 @@ devtools::install_github("troyhill/TTFF")
 ```
 
 This R package has the data from all rainfall, PET, and stage stations included in the analysis done by the COP modeling subteam in spring of 2019. 
+
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/troyhill/TTFF?branch=master&svg=true)](https://ci.appveyor.com/project/troyhill/TTFF) [![Build Status](https://travis-ci.org/troyhill/TTFF.svg?branch=master)](https://travis-ci.org/troyhill/TTFF) 
+
