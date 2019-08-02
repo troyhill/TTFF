@@ -67,13 +67,13 @@ Q<sub>t</sub><sup>sum</sup> is the target flow (sum of  S12C, S12D and S333) for
 
 S<sub>t</sub><sup>avg1</sup> is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
 
-S<sub>t</sub><sup>nesrs2</sup> are observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
+S<sub>t</sub><sup>nesrs2</sup> is observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
 Q<sub>t-1</sub> is the sum of observed releases at S12A, S12B, S12C, S12D and S333 for the previous week (cfs),
 
 R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
-PET<sub>t</sub>  is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
+PET<sub>t</sub> is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
 
 ZA<sub>t</sub> is the Zone A regulation stage (ft, NGVD) value for time step t (beginning of current week).
 
