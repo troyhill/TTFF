@@ -16,12 +16,14 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 
 [comment]: <>(
 
+<img src="{{site.url}}/inst/figures/TTFFestimates.png" style="display: block; margin: auto;" />
+
 ![](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFFestimates.png "TTFF estimates")
 )
 
 -->
 
-<img src="{{site.url}}/inst/figures/TTFFestimates.png" style="display: block; margin: auto;" />
+![](https://github.com/troyhill/TTFF/blob/master/inst/figures/TTFFestimates.png "TTFF estimates")
 
 &nbsp;
 
