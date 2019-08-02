@@ -1,3 +1,6 @@
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/troyhill/TTFF?branch=master&svg=true)](https://ci.appveyor.com/project/troyhill/TTFF) [![Build Status](https://travis-ci.org/troyhill/TTFF.svg?branch=master)](https://travis-ci.org/troyhill/TTFF) 
+
+
 # Estimating flow across Tamiami Trail
 
 The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving across Tamiami Trail through three water management structures: S12C, S12D, and S333. This page and the accompanying R package compare different approaches to modeling flow. These approaches use data from a network of stage, potential evapotranspiration (PET), and rainfall gauges in WCA 3A and Everglades National Park. Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
