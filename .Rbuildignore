@@ -9,5 +9,4 @@
 ^.*\.Rproj$
 ^data\\a\.RData$
 ^\.httr-oauth$
-\docs*
-*.RProj
+^.*\.Rproj$
