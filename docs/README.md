@@ -5,12 +5,9 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 
 &nbsp;
 
-&nbsp;
 
 ## Current model values:
 
-
-&nbsp;
 
 <!---
 
@@ -31,7 +28,6 @@ Figure 1. Observed summed weekly flow through S333 and the S12C/D structures dur
 
 &nbsp;
 
-&nbsp;
 
 ## Model descriptions
 
@@ -94,7 +90,6 @@ Coefficients and associated standard errors:
 
 &nbsp;
 
-&nbsp;
 
 
 ### 2. Segmented multiple linear regression
@@ -115,7 +110,6 @@ Coefficients and associated standard errors:
 | Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
 
 
-&nbsp;
 
 &nbsp;
 
@@ -164,7 +158,6 @@ Q = B<sub>0</sub> + B<sub>1</sub> * Q<sub>pred</sub><sup>1/2</sup>
 | Coefficient	   | -19828.2 | 298.40 |
 | Standard Error | 631.55 | 5.15 |
 
-&nbsp;
 
 &nbsp;
 
