@@ -1,0 +1,241 @@
+
+
+
+### script downloads the previous week's data and runs versions of the TTFF
+
+pkg.list <- c("segmented", "plyr", "devtools")
+missing.packages <- pkg.list[which(!pkg.list %in% installed.packages())]
+if (length(missing.packages) > 0) {
+  install.packages(missing.packages, repos='http://cran.us.r-project.org')
+}
+if (!"SFNRC" %in% installed.packages()) devtools::install_github("troyhill/SFNRC")
+
+
+library(segmented)
+library(plyr)
+library(SFNRC)
+
+
+
+
+
+
+
+### should previous week's data be used if this week's is unavailable?
+usePrevious <- 1
+###
+
+wca3a  <- c("3A3", "3A4", "3A28") # stage data: may not be averaging as intended. P1074 is DBKey for 3A28
+nesrs2 <- c("NE2") # stage: verify that this is the correct station - docs refer to NESRS2
+ppt    <- c("RPL") # average weekly rainfall (inches) for current week. Not sure what stations are used for rainfall in WCA3A and BCNP or what the source of this data is.
+stns   <- c("S12D", "S12C", "S333") # sum of previous week's flow (cfs)
+pet    <- "3AS3WX" 
+ZA     <- "" # zone A regulation schedule stage for current week (ft NGVD)
+
+
+# Define date range -------------------------------------------------------
+
+today <- Sys.Date()
+# aggregation by week:
+# https://stackoverflow.com/questions/43813249/r-round-down-dates-to-first-day-of-the-week
+
+startOfCurrentWeek <- data.frame(
+  today,
+  current = as.Date(as.character(cut(as.Date(today), "week"))),
+  previous = as.Date(as.character(cut(as.Date(today), "week"))) - 7,
+  stringsAsFactors = FALSE)
+
+
+
+# Prepare data ------------------------------------------------------------
+
+targetDate <- startOfCurrentWeek$current - 0
+
+
+### PET 
+### not sure what time scale is used. DataForEver PET is in mm
+### adjustments: used station "FMB" instead of "3AS3WX" (which I can't find PET data for). Values are markedly lower than those in the dataset SFWMD provided.
+petDat <- getDBHYDROhydro(dbkey = "US347") # units are inches
+# tail(petDat)
+petDat.fin <- ifelse(targetDate %in% as.Date(as.character(petDat$date)), 
+                     petDat$value[as.Date(as.character(petDat$date)) %in% targetDate],
+                     NA)
+
+
+
+### precip data
+### should be sum of inches for current week. Nexrad data sourced from SFWMD.
+# ### modified version uses the sum at station 3AS3WX for the previous week. To add more: https://my.sfwmd.gov/dbhydroplsql/show_dbkey_info.show_dbkeys_matched?v_js_flag=Y&v_category=WEATHER&v_station=%25&v_data_type=RAIN&v_county=DAD&v_dbkey_list_flag=Y&v_order_by=STATION
+# pptDat     <- getDBHYDROhydro(dbkey = "LA375")
+# pptDat     <- pptDat[as.Date(as.character(pptDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
+# pptDat.fin <- sum(pptDat$value, na.rm = TRUE) # check that units are inches
+
+url <- "https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt"
+pptDat <- read.table("https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt", 
+                 sep = ' ',header = FALSE, skip = 12,quote='', comment='', fill = TRUE)
+pptDat <- pptDat[pptDat$V1 %in% "WCA3" , ]
+pptDat <- pptDat[, colSums(is.na(pptDat)) < nrow(pptDat)]
+names(pptDat)[1:2] <- c("basin", "date")
+pptDat$date        <- as.Date(pptDat$date, format = "%d-%b-%Y")
+pptDat$ppt_in <- rowSums(pptDat[, -c(1:2)], na.rm = TRUE)
+pptDat <- pptDat[, c("basin", "date", "ppt_in")]
+pptDat.int     <- pptDat[pptDat$date %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
+pptDat.fin <- sum(pptDat.int$ppt_in, na.rm = TRUE)
+
+
+### WCA stage data
+### mean at start of current week
+### DBHydro version: Couldn't identify DBKeys
+# getDBkey(stn = "3A")
+wcaDBKeys <- c("15943") # in DBHYDRO as "WCA3A average"
+wcaDat <- getDBHYDROhydro(dbkey = wcaDBKeys)
+wcaDat.fin <- ifelse(targetDate %in% as.Date(as.character(wcaDat$date)),
+                     mean(wcaDat$value[as.Date(as.character(wcaDat$date)) %in% targetDate], na.rm = TRUE),
+                     NA)
+
+### dataForEver version:
+# wcaDat     <- getHydro(stns = wca3a, parameter_list = "stage", data_shape = "wide")
+# wcaDat     <- wcaDat[wcaDat$stn %in% wca3a, ]
+# wcaDat.fin <- ifelse(targetDate %in% as.Date(as.character(wcaDat$date)), mean(wcaDat$stage[as.Date(as.character(wcaDat$date)) %in% targetDate], na.rm = TRUE), NA)
+
+### NESRS stage data
+### stage at start of current week.  units = feet, datum not specified but probably NGVD29
+# srsDat     <- getHydro(stns = nesrs2, parameter_list = "stage", data_shape = "wide")
+# srsDat     <- srsDat[srsDat$stn %in% nesrs2, ]
+# srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)), srsDat$stage[as.Date(as.character(srsDat$date)) %in% targetDate], NA)
+srsDBKey   <- "01218"
+srsDat     <- getDBHYDROhydro(dbkey = srsDBKey)
+srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)), 
+                     srsDat$value[as.Date(as.character(srsDat$date)) %in% targetDate], 
+                     NA)
+
+### S12C/D/S333 flow 
+### sum of cfs in previous week (sum of 7 days from each structure)
+### Instantaneous DBKeys: 
+### Daily means DBKeys: c("03620", "03626", "03632", "03638", "91487")
+### alternative DBKeys: S12A: "03620"; S12B: "00610"; S12C: "00621"; S12D: "01310"; S333: "65086"
+# flowDat     <- getHydro(stns = stns, parameter_list = "flow", data_shape = "wide") 
+# flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
+# flowDat.fin <- sum(flowDat.int$flow, na.rm = TRUE)
+
+
+flowDBKeys  <- c(#"03620", "03626",  ## exclude S12A, S12B
+  "03632", "03638", "91487")
+flowDat     <- do.call(rbind, lapply(flowDBKeys, getDBHYDROhydro))
+flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
+flowDat.fin <- sum(flowDat.int$value, na.rm = TRUE)
+
+### Zone A regulation schedule at beginning of current week
+### why is this not consistent between years?
+TTFF.dat       <- read.csv(system.file("extdata", "data_TTFF.csv", package="TTFF")) # their week begins on a Friday
+TTFF.dat$date  <- as.POSIXct(TTFF.dat$Date, format = "%m/%d/%Y") 
+TTFF.dat$date2 <- substr(TTFF.dat$date, 6, 10)
+ZA.dat         <- ddply(TTFF.dat[, !names(TTFF.dat) %in% "date"], .(date2), summarise, ZoneA = mean(Za, na.rm = TRUE))
+
+ZA.fin         <- ZA.dat$ZoneA[ZA.dat$date2 == substr(targetDate, 6, 10)] 
+
+
+if (any(is.na(c(ZA.fin, petDat.fin, flowDat.fin, srsDat.fin, wcaDat.fin, pptDat.fin)))) {
+  stop ("There is not enough up-to-date data to update models")
+}
+
+
+# merge all data, create weekly values ----------------------------------------------------------
+petDat$week <- as.Date(as.character(cut(as.Date(petDat$date), "week"))) # pet at start of week
+pet.wkly    <- ddply(petDat, .(week), summarise, pet = head(value, 1))
+
+pptDat$week <- as.Date(as.character(cut(as.Date(pptDat$date), "week"))) # summed ppt (use previous week's)
+ppt.wkly    <- ddply(pptDat, .(week), summarise, ppt = sum(ppt_in, na.rm = TRUE))
+### shift by 1 week
+ppt.wkly    <- data.frame(week = ppt.wkly$week, prev.ppt = c(NA, ppt.wkly$ppt[-c(nrow(ppt.wkly))]))
+                          
+wcaDat$week <- as.Date(as.character(cut(as.Date(wcaDat$date), "week"))) # mean stage at start of week
+wca.wkly    <- ddply(wcaDat, .(week), summarise, wca = head(value, 1))
+
+srsDat$week <- as.Date(as.character(cut(as.Date(srsDat$date), "week"))) # mean stage at start of week
+srs.wkly    <- ddply(srsDat, .(week), summarise, srs = head(value, 1))
+
+flowDat$week <- as.Date(as.character(cut(as.Date(flowDat$date), "week"))) # summed flow (use previous week's)
+flow.wkly    <- ddply(flowDat, .(week), summarise, flow = sum(value, na.rm = TRUE))
+### shift flows by one week
+flow.wkly    <- data.frame(week = flow.wkly$week, flow = flow.wkly$flow, prev.flow = c(NA, flow.wkly$flow[-c(nrow(flow.wkly))]))
+
+flow.wkly$ZA <- ZA.dat$ZoneA[match(substr(flow.wkly$week, 6, 10), ZA.dat$date2)]
+
+
+allDat <- join_all(list(pet.wkly, ppt.wkly, wca.wkly, srs.wkly, flow.wkly), by = "week")
+
+
+
+# Multiple linear regression (no intercept) -------------------------------
+
+### approximation of Tamiami Trail Flow Formula
+pkg.dat <- read.csv(system.file("extdata", "data_TTFF.csv", package="TTFF"))
+names(pkg.dat) <- c("date", "flow", "wca", "srs", "prev.flow", "prev.ppt", "pet", "ZA")
+ttff.mod <- lm(flow ~ wca + srs + prev.flow + prev.ppt + pet + ZA - 1, data = pkg.dat)
+# summary(ttff.mod) # R2 = 0.82
+
+allDat$TTFF     <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$fit
+allDat$TTFF.err <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$se.fit
+
+
+# Segmented multiple linear regression ----------------------------------------
+
+
+### Segmented model
+br1=7.00
+br2=7.90
+lin.mod <- lm(flow ~ wca + srs, data = pkg.dat)
+suppressWarnings(
+  segmented.mod <- segmented(lin.mod, seg.Z = ~srs, psi = list(srs = c(br1, br2)))
+)
+# summary(segmented.mod)
+
+allDat$seg     <- predict(object = segmented.mod, newdata = allDat, se.fit = TRUE)$fit
+allDat$seg.err <- predict(object = segmented.mod, newdata = allDat, se.fit = TRUE)$se.fit
+
+
+# Create figures for git page ---------------------------------------------
+
+### plot past month of combined flow, show current recommendations from each flow formula
+### actual flow in week X
+# flowDat$date2 <- as.Date(as.character(cut(as.Date(flowDat$date), "week")))
+# dd.flowDat <- ddply(flowDat, .(date2), summarise, flow = sum(value, na.rm = TRUE))
+# dd.flowDat <- dd.flowDat[-nrow(dd.flowDat), ]
+
+
+
+beginDate <- targetDate - 30*9 #as.Date("2018-09-30")
+
+png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/TTFFestimates.png", width = 10, height = 4, units = "in", res = 150)
+TTFF.color <- "firebrick2"
+seg.color  <- "dodgerblue3"
+par(mar = c(3, 5, 1, 0.5))
+plot(flow / 1000 ~ week, 
+     data = allDat[allDat$week < targetDate, ],  # exclude current partial week
+     pch = 19, cex = 0.6, las = 1, 
+     xlim = c(beginDate, targetDate + 60), 
+     ylim = c(0, max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)]) / 1000), 
+     ylab = "Weekly flow \n (1k cfs; sum of daily flows at S12s and S333)",
+     xlab = "", type = "l")
+mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
+mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
+      side = 1, cex = 0.7, line=2, at = targetDate)
+### Add prediction history
+points(x = allDat$week, y = allDat$TTFF / 1000, col = TTFF.color, lty = 2, type = "p", cex = 0.5, pch = 19)
+arrows(allDat$week, (allDat$TTFF - allDat$TTFF.err) / 1000, 
+       allDat$week, (allDat$TTFF + allDat$TTFF.err) / 1000, 
+       length=0.0, angle=90, code=3, col = TTFF.color)
+
+points(x = allDat$week, y = allDat$seg / 1000, col = seg.color, lty = 2, type = "p", cex = 0.5, pch = 19)
+arrows(allDat$week, (allDat$seg - allDat$seg.err) / 1000, 
+       allDat$week, (allDat$seg + allDat$seg.err) / 1000, 
+       length=0.0, angle=90, code=3, col = seg.color)
+
+text(x = targetDate, y = tail(allDat$seg, 1) / 1000, 
+     paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
+
+text(x = targetDate, y = tail(allDat$TTFF, 1) / 1000, 
+     paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
+dev.off()
+
