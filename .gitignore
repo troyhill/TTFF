@@ -30,3 +30,4 @@ rsconnect/
 .Rproj.user
 *.Rproj$
 TTFF.Rproj
+!/docs/TTFF_application_20190801.R
