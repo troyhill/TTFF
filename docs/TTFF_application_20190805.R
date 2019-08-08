@@ -21,42 +21,17 @@ library(SFNRC)
 
 
 
-### should previous week's data be used if this week's is unavailable?
-usePrevious <- 1
-###
-
-wca3a  <- c("3A3", "3A4", "3A28") # stage data: may not be averaging as intended. P1074 is DBKey for 3A28
-nesrs2 <- c("NE2") # stage: verify that this is the correct station - docs refer to NESRS2
-ppt    <- c("RPL") # average weekly rainfall (inches) for current week. Not sure what stations are used for rainfall in WCA3A and BCNP or what the source of this data is.
-stns   <- c("S12D", "S12C", "S333") # sum of previous week's flow (cfs)
-pet    <- "3AS3WX" 
-ZA     <- "" # zone A regulation schedule stage for current week (ft NGVD)
-
-
-# Define date range -------------------------------------------------------
-
-today <- Sys.Date()
-# aggregation by week:
-# https://stackoverflow.com/questions/43813249/r-round-down-dates-to-first-day-of-the-week
-
-startOfCurrentWeek <- data.frame(
-  today,
-  current = as.Date(as.character(cut(as.Date(today), "week"))),
-  previous = as.Date(as.character(cut(as.Date(today), "week"))) - 7,
-  stringsAsFactors = FALSE)
-
 
 
 # Prepare data ------------------------------------------------------------
 
-targetDate <- startOfCurrentWeek$current - 0
+targetDate <- Sys.Date()
 
 
 ### PET 
 ### not sure what time scale is used. DataForEver PET is in mm
 ### adjustments: used station "FMB" instead of "3AS3WX" (which I can't find PET data for). Values are markedly lower than those in the dataset SFWMD provided.
-petDat <- getDBHYDROhydro(dbkey = "US347") # units are inches
-# tail(petDat)
+petDat     <- getDBHYDROhydro(dbkey = "US347") # units are inches
 petDat.fin <- ifelse(targetDate %in% as.Date(as.character(petDat$date)), 
                      petDat$value[as.Date(as.character(petDat$date)) %in% targetDate],
                      NA)
@@ -70,39 +45,31 @@ petDat.fin <- ifelse(targetDate %in% as.Date(as.character(petDat$date)),
 # pptDat     <- pptDat[as.Date(as.character(pptDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
 # pptDat.fin <- sum(pptDat$value, na.rm = TRUE) # check that units are inches
 
-url <- "https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt"
-pptDat <- read.table("https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt", 
-                 sep = ' ',header = FALSE, skip = 12,quote='', comment='', fill = TRUE)
-pptDat <- pptDat[pptDat$V1 %in% "WCA3" , ]
-pptDat <- pptDat[, colSums(is.na(pptDat)) < nrow(pptDat)]
+url                <- "https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt"
+pptDat             <- read.table("https://apps.sfwmd.gov/sfwmd/common/images/weather/site_rain/CONSERVAREA3_rain.txt", 
+                               sep = ' ',header = FALSE, skip = 12,quote='', comment='', fill = TRUE)
+pptDat             <- pptDat[pptDat$V1 %in% "WCA3" , ]
+pptDat             <- pptDat[, colSums(is.na(pptDat)) < nrow(pptDat)]
 names(pptDat)[1:2] <- c("basin", "date")
 pptDat$date        <- as.Date(pptDat$date, format = "%d-%b-%Y")
-pptDat$ppt_in <- rowSums(pptDat[, -c(1:2)], na.rm = TRUE)
-pptDat <- pptDat[, c("basin", "date", "ppt_in")]
-pptDat.int     <- pptDat[pptDat$date %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
-pptDat.fin <- sum(pptDat.int$ppt_in, na.rm = TRUE)
+pptDat$ppt_in      <- rowSums(pptDat[, -c(1:2)], na.rm = TRUE)
+pptDat             <- pptDat[, c("basin", "date", "ppt_in")]
+pptDat.int         <- pptDat[pptDat$date %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
+pptDat.fin         <- sum(pptDat.int$ppt_in, na.rm = TRUE)
 
 
 ### WCA stage data
 ### mean at start of current week
 ### DBHydro version: Couldn't identify DBKeys
 # getDBkey(stn = "3A")
-wcaDBKeys <- c("15943") # in DBHYDRO as "WCA3A average"
-wcaDat <- getDBHYDROhydro(dbkey = wcaDBKeys)
+wcaDBKeys  <- c("15943") # in DBHYDRO as "WCA3A average"
+wcaDat     <- getDBHYDROhydro(dbkey = wcaDBKeys)
 wcaDat.fin <- ifelse(targetDate %in% as.Date(as.character(wcaDat$date)),
                      mean(wcaDat$value[as.Date(as.character(wcaDat$date)) %in% targetDate], na.rm = TRUE),
                      NA)
 
-### dataForEver version:
-# wcaDat     <- getHydro(stns = wca3a, parameter_list = "stage", data_shape = "wide")
-# wcaDat     <- wcaDat[wcaDat$stn %in% wca3a, ]
-# wcaDat.fin <- ifelse(targetDate %in% as.Date(as.character(wcaDat$date)), mean(wcaDat$stage[as.Date(as.character(wcaDat$date)) %in% targetDate], na.rm = TRUE), NA)
-
 ### NESRS stage data
 ### stage at start of current week.  units = feet, datum not specified but probably NGVD29
-# srsDat     <- getHydro(stns = nesrs2, parameter_list = "stage", data_shape = "wide")
-# srsDat     <- srsDat[srsDat$stn %in% nesrs2, ]
-# srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)), srsDat$stage[as.Date(as.character(srsDat$date)) %in% targetDate], NA)
 srsDBKey   <- "01218"
 srsDat     <- getDBHYDROhydro(dbkey = srsDBKey)
 srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)), 
@@ -114,13 +81,7 @@ srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)),
 ### Instantaneous DBKeys: 
 ### Daily means DBKeys: c("03620", "03626", "03632", "03638", "91487")
 ### alternative DBKeys: S12A: "03620"; S12B: "00610"; S12C: "00621"; S12D: "01310"; S333: "65086"
-# flowDat     <- getHydro(stns = stns, parameter_list = "flow", data_shape = "wide") 
-# flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
-# flowDat.fin <- sum(flowDat.int$flow, na.rm = TRUE)
-
-
-flowDBKeys  <- c("03620", "03626",  ## include S12A, S12B
-  "03632", "03638", "91487")
+flowDBKeys  <- c("03620", "03626", "03632", "03638", "91487")
 flowDat     <- do.call(rbind, lapply(flowDBKeys, getDBHYDROhydro))
 flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
 ### Based on SFWMD's data, sum all structures for each day, then get mean daily value for the week.
@@ -133,12 +94,11 @@ TTFF.dat       <- read.csv(system.file("extdata", "data_TTFF.csv", package="TTFF
 TTFF.dat$date  <- as.POSIXct(TTFF.dat$Date, format = "%m/%d/%Y") 
 TTFF.dat$date2 <- substr(TTFF.dat$date, 6, 10)
 ZA.dat         <- ddply(TTFF.dat[, !names(TTFF.dat) %in% "date"], .(date2), summarise, ZoneA = mean(Za, na.rm = TRUE))
-
 ZA.fin         <- ZA.dat$ZoneA[ZA.dat$date2 == substr(targetDate, 6, 10)] 
 
 
 if (any(is.na(c(ZA.fin, petDat.fin, flowDat.fin, srsDat.fin, wcaDat.fin, pptDat.fin)))) {
-  stop ("There is not enough up-to-date data to update models")
+  stop ("There are not enough new data to update models")
 }
 
 
@@ -161,7 +121,6 @@ flowDat$week <- as.Date(as.character(cut(as.Date(flowDat$date), "week"))) # summ
 flow.wkly    <- ddply(flowDat, .(week), summarise, flow = sum(value, na.rm = TRUE) / 7)
 ### shift flows by one week
 flow.wkly    <- data.frame(week = flow.wkly$week, flow = flow.wkly$flow, prev.flow = c(NA, flow.wkly$flow[-c(nrow(flow.wkly))]))
-
 flow.wkly$ZA <- ZA.dat$ZoneA[match(substr(flow.wkly$week, 6, 10), ZA.dat$date2)]
 
 
@@ -172,9 +131,9 @@ allDat <- join_all(list(pet.wkly, ppt.wkly, wca.wkly, srs.wkly, flow.wkly), by =
 # Multiple linear regression (no intercept) -------------------------------
 
 ### approximation of Tamiami Trail Flow Formula
-pkg.dat <- read.csv(system.file("extdata", "data_TTFF.csv", package="TTFF"))
+pkg.dat        <- read.csv(system.file("extdata", "data_TTFF.csv", package="TTFF"))
 names(pkg.dat) <- c("date", "flow", "wca", "srs", "prev.flow", "prev.ppt", "pet", "ZA")
-ttff.mod <- lm(flow ~ wca + srs + prev.flow + prev.ppt + pet + ZA - 1, data = pkg.dat)
+ttff.mod       <- lm(flow ~ wca + srs + prev.flow + prev.ppt + pet + ZA - 1, data = pkg.dat)
 # summary(ttff.mod) # R2 = 0.82
 
 allDat$TTFF     <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$fit
@@ -185,9 +144,9 @@ allDat$TTFF.err <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$s
 
 
 ### Segmented model
-br1=7.00
-br2=7.90
-lin.mod <- lm(flow ~ wca + srs, data = pkg.dat)
+br1 <- 7.00
+br2 <- 7.90
+lin.mod         <- lm(flow ~ wca + srs, data = pkg.dat)
 suppressWarnings(
   segmented.mod <- segmented(lin.mod, seg.Z = ~srs, psi = list(srs = c(br1, br2)))
 )
@@ -197,22 +156,31 @@ allDat$seg     <- predict(object = segmented.mod, newdata = allDat, se.fit = TRU
 allDat$seg.err <- predict(object = segmented.mod, newdata = allDat, se.fit = TRUE)$se.fit
 
 
+
+
+# PCA  --------------------------------------------------------------------
+
+### can't recreate training dataset, so here's an approximation
+
+
+
+
 # Create figures for git page ---------------------------------------------
-
 ### plot past month of combined flow, show current recommendations from each flow formula
-### actual flow in week X
-# flowDat$date2 <- as.Date(as.character(cut(as.Date(flowDat$date), "week")))
-# dd.flowDat <- ddply(flowDat, .(date2), summarise, flow = sum(value, na.rm = TRUE))
-# dd.flowDat <- dd.flowDat[-nrow(dd.flowDat), ]
 
-
-
-beginDate <- targetDate - 30*9 #as.Date("2018-09-30")
+beginDate  <- targetDate - 30*9
 
 png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/TTFFestimates.png", width = 10, height = 4, units = "in", res = 150)
 TTFF.color <- "firebrick2"
 seg.color  <- "dodgerblue3"
-maxVal <-  1.1 * max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])
+maxVal     <-  1.1 * max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])
+segVal     <- 0.6*maxVal
+TTFFVal    <- 0.85*maxVal
+if (tail(allDat$seg, 1) >= tail(allDat$TTFF, 1)) {
+  segVal   <- 0.85*maxVal
+  TTFFVal  <- 0.6*maxVal
+}
+
 
 par(mar = c(3, 5, 1, 0.5))
 plot(flow ~ week, 
@@ -238,16 +206,8 @@ arrows(allDat$week, (allDat$seg - allDat$seg.err) ,
        allDat$week, (allDat$seg + allDat$seg.err) , 
        length=0.0, angle=90, code=3, col = seg.color)
 
-segVal    <- 0.6*maxVal
-TTFFVal   <- 0.85*maxVal
-if (tail(allDat$seg, 1) >= tail(allDat$TTFF, 1)) {
-  segVal  <- 0.85*maxVal
-  TTFFVal <- 0.6*maxVal
-}
-  
 text(x = targetDate, y = segVal, # tail(allDat$seg, 1) , 
      paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
-
 text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) , 
      paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
 dev.off()
