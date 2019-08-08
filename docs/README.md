@@ -21,7 +21,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 <img src="{{site.url}}/figures/TTFFestimates.png" style="display: block; margin: auto;" />
 
 
-Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates for the current week are shown in red (multiple linear regression model) and blue (segmented regression model). 
+Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](1.-multiple-linear-regression) (red), [segmented regression](2.-segmented-multiple-linear-regression) (blue), and [principal component analysis](3.-principal-component-analysis) (green) are also shown. 
 
 &nbsp;
 
