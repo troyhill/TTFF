@@ -212,16 +212,18 @@ beginDate <- targetDate - 30*9 #as.Date("2018-09-30")
 png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/TTFFestimates.png", width = 10, height = 4, units = "in", res = 150)
 TTFF.color <- "firebrick2"
 seg.color  <- "dodgerblue3"
+maxVal <-  1.1 * max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])
+
 par(mar = c(3, 5, 1, 0.5))
 plot(flow ~ week, 
      data = allDat[allDat$week < targetDate, ],  # exclude current partial week
      pch = 19, cex = 0.6, las = 1, yaxt = "n",
      xlim = c(beginDate, targetDate + 60), 
-     ylim = c(0, max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])), 
+     ylim = c(0, maxVal), 
      ylab = "",
      xlab = "", type = "l")
 axis(side = 2, at = axTicks(side = 2), labels = axTicks(side = 2) / 1000, las = 1)
-mtext(text = "Weekly flow \n (1k cfs; sum of daily flows at S12s and S333)", side = 2, line = 2)
+mtext(text = "Weekly flow \n (1k cfs per day; mean combined daily flows at S12s and S333)", side = 2, line = 2)
 mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
       side = 1, cex = 0.7, line=2, at = targetDate)
@@ -236,10 +238,17 @@ arrows(allDat$week, (allDat$seg - allDat$seg.err) ,
        allDat$week, (allDat$seg + allDat$seg.err) , 
        length=0.0, angle=90, code=3, col = seg.color)
 
-text(x = targetDate, y = tail(allDat$seg, 1) , 
+segVal    <- 0.6*maxVal
+TTFFVal   <- 0.85*maxVal
+if (tail(allDat$seg, 1) >= tail(allDat$TTFF, 1)) {
+  segVal  <- 0.85*maxVal
+  TTFFVal <- 0.6*maxVal
+}
+  
+text(x = targetDate, y = segVal, # tail(allDat$seg, 1) , 
      paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
 
-text(x = targetDate, y = tail(allDat$TTFF, 1) , 
+text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) , 
      paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
 dev.off()
 
