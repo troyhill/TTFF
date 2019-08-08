@@ -223,7 +223,7 @@ plot(flow ~ week,
      ylab = "",
      xlab = "", type = "l")
 axis(side = 2, at = axTicks(side = 2), labels = axTicks(side = 2) / 1000, las = 1)
-mtext(text = "Weekly flow \n (1k cfs per day; mean combined daily flows at S12s and S333)", side = 2, line = 2)
+mtext(text = "Weekly flow \n (1k cfs per day; mean total daily flow (S12s + S333)", side = 2, line = 2.3)
 mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
       side = 1, cex = 0.7, line=2, at = targetDate)
