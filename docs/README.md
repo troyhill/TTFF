@@ -161,9 +161,10 @@ The R package containing data and sample analysis can be installed from GitHub:
 ```
 install.packages("devtools")
 devtools::install_github("troyhill/TTFF")
+
 ```
 
-This R package has the data from all rainfall, PET, and stage stations included in the analysis done by the COP modeling subteam in spring of 2019. 
+This R package has the data from all rainfall, PET, and stage stations included in the analysis done by the COP modeling subteam in spring of 2019. The analysis presented above can be generated using [this R script](https://github.com/troyhill/TTFF/blob/master/docs/TTFF_application_20190805.R).
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/troyhill/TTFF?branch=master&svg=true)](https://ci.appveyor.com/project/troyhill/TTFF) [![Build Status](https://travis-ci.org/troyhill/TTFF.svg?branch=master)](https://travis-ci.org/troyhill/TTFF) 
 
