@@ -2,6 +2,7 @@
 
 export(bootstrapPCA)
 export(estimateFlow)
+export(getDateOffset)
 export(mergeData)
 importFrom(FactoMineR,predict.PCA)
 importFrom(graphics,lines)

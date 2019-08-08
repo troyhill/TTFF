@@ -3,16 +3,19 @@
 
 ### script downloads the previous week's data and runs versions of the TTFF
 
-pkg.list <- c("segmented", "plyr", "devtools")
+pkg.list <- c("segmented", "plyr", "FactoMineR", "devtools")
 missing.packages <- pkg.list[which(!pkg.list %in% installed.packages())]
 if (length(missing.packages) > 0) {
   install.packages(missing.packages, repos='http://cran.us.r-project.org')
 }
 if (!"SFNRC" %in% installed.packages()) devtools::install_github("troyhill/SFNRC")
+if (!"TTFF" %in% installed.packages()) devtools::install_github("troyhill/TTFF")
 
 
 library(segmented)
 library(plyr)
+library(FactoMineR)
+library(TTFF)
 library(SFNRC)
 
 
@@ -26,7 +29,9 @@ library(SFNRC)
 # Prepare data ------------------------------------------------------------
 
 targetDate <- Sys.Date()
-
+# adjustment factor needed to use Friday as the start of the week, per SFWMD training data.
+weekAdjust <- 4
+  
 
 ### PET 
 ### not sure what time scale is used. DataForEver PET is in mm
@@ -103,7 +108,11 @@ if (any(is.na(c(ZA.fin, petDat.fin, flowDat.fin, srsDat.fin, wcaDat.fin, pptDat.
 
 
 # merge all data, create weekly values ----------------------------------------------------------
-petDat$week <- as.Date(as.character(cut(as.Date(petDat$date), "week"))) # pet at start of week
+# SFWMD used Friday as first day of week in their training data. 
+# R's sensible default is to use Monday. Not resolving this at the moment.
+dateOffset  <- 0 # getDateOffset(dataset = petDat, day = "Friday") # needs more testing
+
+petDat$week <- as.Date(as.character(cut(as.Date(petDat$date) + dateOffset, "week"))) # pet at start of week
 pet.wkly    <- ddply(petDat, .(week), summarise, pet = head(value, 1))
 
 pptDat$week <- as.Date(as.character(cut(as.Date(pptDat$date), "week"))) # summed ppt (use previous week's)
@@ -162,6 +171,69 @@ allDat$seg.err <- predict(object = segmented.mod, newdata = allDat, se.fit = TRU
 
 ### can't recreate training dataset, so here's an approximation
 
+rain.keys <- c(# "06044", "06041", "LX283", "JA344", "K8628", # too many missing values
+               "06040", "HB872", "H2004", "H2005")
+pet.keys  <- c("US347", "OH516", "OH513")
+rh.keys   <- c("LA372", "UP568", "GE351", "16259", "OH514")
+hw.keys   <- c("90230", "00604", "AO063", "01307", "AJ013") # all in NAVD88?
+### flow: head(flowDat)
+
+rain.pca    <- do.call(rbind, lapply(rain.keys, getDBHYDROhydro))
+pet.pca     <- do.call(rbind, lapply(pet.keys, getDBHYDROhydro))
+rh.pca      <- do.call(rbind, lapply(rh.keys, getDBHYDROhydro))
+hw.pca      <- do.call(rbind, lapply(hw.keys, getDBHYDROhydro))
+
+
+rain.pca.int         <- reshape(rain.pca[, c("stn", "date", "value")], idvar = "date", timevar = "stn", direction = "wide")
+names(rain.pca.int)  <- gsub(x = names(rain.pca.int), pattern = "value", replacement = "rain")
+pet.pca.int          <- reshape(pet.pca[, c("stn", "date", "value")], idvar = "date", timevar = "stn", direction = "wide")
+names(pet.pca.int)   <- gsub(x = names(pet.pca.int), pattern = "value", replacement = "pet")
+hw.pca.int           <- reshape(hw.pca[, c("stn", "date", "value")], idvar = "date", timevar = "stn", direction = "wide")
+names(hw.pca.int)    <- gsub(x = names(hw.pca.int), pattern = "value", replacement = "stg")
+flow.pca.int         <- reshape(flowDat[, c("stn", "date", "value")], idvar = "date", timevar = "stn", direction = "wide")
+names(flow.pca.int)  <- gsub(x = names(flow.pca.int), pattern = "value", replacement = "flow")
+flow.pca.int$sumFlow <- rowSums(flow.pca.int[, -1], na.rm = TRUE)
+
+pca.prep <- join_all(list(rain.pca.int, pet.pca.int, hw.pca.int, flow.pca.int), by = "date")
+
+pca.prep$week <- as.Date(as.character(cut(as.Date(pca.prep$date), "week")))
+# week starts on Monday
+# use sum for rain, PET, flow variables
+# use mean for stage variables
+wkly.sum  <- plyr::ddply(pca.prep[, grep(x = names(pca.prep), pattern = "rain|pet|week")], .(week), numcolwise(sum, na.rm = TRUE))
+wkly.mean <- plyr::ddply(pca.prep[, grep(x = names(pca.prep), pattern = "stg|flow|Flow|week")], .(week), numcolwise(mean, na.rm = TRUE))
+wkly.mean$flow.lag <- c(NA, wkly.mean$sumFlow[-nrow(wkly.mean)])
+
+pca.wkly <- join_all(list(wkly.mean, wkly.sum), by = "week")
+
+### separate past year's data
+pca.modern <- pca.wkly[pca.wkly$week >= Sys.Date() - 365, ]
+pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
+
+### run PCA
+suppressWarnings(
+  pca1 <- FactoMineR::PCA(pca.hist[, -1],  ncp = 6, scale.unit = TRUE)
+)
+
+# head(pca1$eig[, c(2,3)]) # ~81% of the variance in the data is captured in the first five principal components
+
+pca.out  <- data.frame(cbind(pca1$ind$coord, 
+                             sumFlow = pca.hist$sumFlow))
+pca.lm   <- lm(sumFlow ~ Dim.1 + Dim.2 + Dim.3 + Dim.4 + Dim.5 + Dim.6, data = pca.out)
+# summary(pca.lm) # r2 = 0.96
+# pca.sqrt <- lm(I((sumFlow)^2) ~ Dim.1 + Dim.2 + Dim.3 + Dim.4, data = pca.out)
+
+pcaPred <- FactoMineR::predict.PCA(pca1, newdata = pca.modern)
+testDat <- data.frame(pcaPred$coord, week = pca.modern$week)
+
+testDat$pca     <- predict(object = pca.lm, newdata = testDat, se.fit = TRUE)$fit
+testDat$pca.err <- predict(object = pca.lm, newdata = testDat, se.fit = TRUE)$se.fit
+testDat         <- join_all(list(testDat, pca.modern[, c("week", "sumFlow")]), by = "week")
+
+
+summary(lm1 <- stats::lm(sumFlow ~ pca, data = testDat)) # r2 = 0.96
+plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6)
+abline(lm1, col = "red")
 
 
 
@@ -173,9 +245,11 @@ beginDate  <- targetDate - 30*9
 png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/TTFFestimates.png", width = 10, height = 4, units = "in", res = 150)
 TTFF.color <- "firebrick2"
 seg.color  <- "dodgerblue3"
+pca.color  <- "darkgreen"
 maxVal     <-  1.1 * max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])
 segVal     <- 0.6*maxVal
 TTFFVal    <- 0.85*maxVal
+pcaVal     <- 0.35*maxVal
 if (tail(allDat$seg, 1) >= tail(allDat$TTFF, 1)) {
   segVal   <- 0.85*maxVal
   TTFFVal  <- 0.6*maxVal
@@ -206,9 +280,17 @@ arrows(allDat$week, (allDat$seg - allDat$seg.err) ,
        allDat$week, (allDat$seg + allDat$seg.err) , 
        length=0.0, angle=90, code=3, col = seg.color)
 
+points(x = testDat$week, y = testDat$pca , col = pca.color, lty = 2, type = "p", cex = 0.5, pch = 19)
+arrows(testDat$week, (testDat$pca - testDat$pca.err) , 
+       testDat$week, (testDat$pca + testDat$pca.err) , 
+       length=0.0, angle=90, code=3, col = pca.color)
+
 text(x = targetDate, y = segVal, # tail(allDat$seg, 1) , 
      paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
 text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) , 
      paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
+text(x = targetDate, y = pcaVal,
+     paste("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), "cfs"), pos = 4, col = pca.color)
+
 dev.off()
 

@@ -59,15 +59,15 @@ mergeData <- function(rainfall, PET, stage, flow, firstDayOfWeek = "Friday") {
   # endOfWeek <- tail(outFlow$dow[outFlow$week %in% unique(outFlow$week)[2]], 1) # fragile code - will return inaccurate data if 2nd week is incomplete. Could be improved by taking tail of each week and finding most common value, e.g., https://stackoverflow.com/questions/17374651/finding-the-most-common-elements-in-a-vector-in-r
   # dateOffset <-  min(which(outFlow$dow == firstDayOfWeek)) - min(which(outFlow$dow == endOfWeek))
   
-  getDateOffset <- function(dataset, day = firstDayOfWeek) {
-    dataset$week <- format(as.Date(dataset$date), "%Y-%W")
-    dataset$dow  <- weekdays(as.Date(dataset$date))
-    startOfWeek  <- head(dataset$dow[dataset$week %in% unique(dataset$week)[2]], 1) # fragile code - will return inaccurate data if 2nd week is incomplete. Could be improved by taking tail of each week and finding most common value, e.g., https://stackoverflow.com/questions/17374651/finding-the-most-common-elements-in-a-vector-in-r
-    returnDat    <-  abs(min(which(dataset$dow == day)) - min(which(dataset$dow == startOfWeek))) - 0
-    invisible(returnDat)
-  }
+  # getDateOffset <- function(dataset) {
+  #   dataset$week <- format(as.Date(dataset$date), "%Y-%W")
+  #   dataset$dow  <- weekdays(as.Date(dataset$date))
+  #   startOfWeek  <- head(dataset$dow[dataset$week %in% unique(dataset$week)[2]], 1) # fragile code - will return inaccurate data if 2nd week is incomplete. Could be improved by taking tail of each week and finding most common value, e.g., https://stackoverflow.com/questions/17374651/finding-the-most-common-elements-in-a-vector-in-r
+  #   returnDat    <-  abs(min(which(dataset$dow == day)) - min(which(dataset$dow == startOfWeek))) - 0
+  #   invisible(returnDat)
+  # }
   
-  dateOffset        <- getDateOffset(outFlow)
+  dateOffset        <- getDateOffset(dataset = outFlow, day = firstDayOfWeek)
   ### now, re-define weeks incorporating offset
   # outFlow$dow2 <- weekdays(as.Date(outFlow$date) + dateOffset) # day-of-week equivalent, where the new "Sunday" is last day of week
   outFlow$week      <- format(as.Date(outFlow$date) + dateOffset, "%Y-%W")
@@ -78,7 +78,7 @@ mergeData <- function(rainfall, PET, stage, flow, firstDayOfWeek = "Friday") {
   outFlow.wkly$date <- plyr::ddply(outFlow, ("week"), plyr::summarise, date = head(date, 1))$date # first date in new week
 
   ### aggregate rain data  
-  dateOffset      <- getDateOffset(rain)
+  dateOffset      <- getDateOffset(dataset = rain, day = firstDayOfWeek)
   rain$week       <- format(as.Date(rain$date) + dateOffset, "%Y-%W")
   rain2.wkly      <- stats::aggregate(rain[!names(rain) %in% c("date", "week")], list(week = rain$week), sum)
   rain2.wkly$date <- plyr::ddply(rain, ("week"), plyr::summarise, date = head(date, 1))$date
@@ -88,7 +88,7 @@ mergeData <- function(rainfall, PET, stage, flow, firstDayOfWeek = "Friday") {
   # rain2.wkly <- xts::apply.weekly(rain2, colSums)
   
   ### aggregate PET data
-  dateOffset     <- getDateOffset(pet)
+  dateOffset     <- getDateOffset(dataset = pet, day = firstDayOfWeek)
   pet$week       <- format(as.Date(pet$date) + dateOffset, "%Y-%W")
   pet2.wkly      <- stats::aggregate(pet[!names(pet) %in% c("date", "week")], list(week = pet$week), sum)
   pet2.wkly$date <- plyr::ddply(pet, ("week"), plyr::summarise, date = head(date, 1))$date
@@ -97,7 +97,7 @@ mergeData <- function(rainfall, PET, stage, flow, firstDayOfWeek = "Friday") {
   # pet2.wkly <- xts::apply.weekly(pet2, colSums) # rate or depth? not sure if this should be sum or mean
   
   ### aggregate stage data
-  dateOffset          <- getDateOffset(outStage)
+  dateOffset          <- getDateOffset(dataset = outStage, day = firstDayOfWeek)
   outStage$week       <- format(as.Date(outStage$date) + dateOffset, "%Y-%W")
   outStage2.wkly      <- stats::aggregate(outStage[!names(outStage) %in% c("date", "week")], list(week = outStage$week), sum)
   outStage2.wkly$date <- plyr::ddply(outStage, ("week"), plyr::summarise, date = head(date, 1))$date
