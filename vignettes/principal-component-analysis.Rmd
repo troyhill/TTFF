@@ -22,9 +22,6 @@ if(!"devtools" %in% installed.packages()){
 if(!"TTFF" %in% installed.packages()){
   devtools::install_github("troyhill/TTFF")
 }
-if(!"here" %in% installed.packages()){
-  install.packages("here", repos='http://cran.us.r-project.org')
-}
 
 library(TTFF)
 
@@ -43,17 +40,20 @@ To prepare the 41-year COP dataset for PCA, daily input data provided by the Sou
 
 ```{r compile data, include=TRUE, echo=TRUE, eval=FALSE}
 ### generate data for period of record by compiling from tab-delimited .txt files
-rainDat  <- paste0(here(), "/inst/extdata/data_Daily_Rain.txt")
-PETDat   <- paste0(here(), "/inst/extdata/data_daily_PET.txt")
-stageDat <- paste0(here(), "/inst/extdata/data_ALT_output_stage.txt")
-flowDat  <- paste0(here(), "/inst/extdata/data_ALTO_output_Flows.txt")
+rainDat  <- system.file("extdata", "data_Daily_Rain.txt", package="TTFF")
+PETDat   <- system.file("extdata", "data_daily_PET.txt", package="TTFF")
+stageDat <- system.file("extdata", "data_ALT_output_stage.txt", package="TTFF") 
+flowDat  <- system.file("extdata", "data_ALTO_output_Flows.txt", package="TTFF")
 
 
 por <- mergeData(rainfall = rainDat, PET = PETDat, 
-                 stage = stageDat, flow = flowDat)
+                 stage = stageDat, flow = flowDat, 
+                 # instead of using Monday as the first day of the week,
+                 # SFWMD uses Friday. Arbitrary, but let's follow that.
+                 firstDayOfWeek = "Friday") 
 
 ### the merged data is supplied and documented with the COPmod package
-?COPmod::por
+?TTFF::por
 ```
 
 ## Principal component analysis
@@ -65,7 +65,7 @@ Applying PCA to the 54-variable COP input dataset shows that 81% of the variatio
 ```{r PCA on whole dataset, echo = TRUE, fig.width = 4.5, fig.height = 4}
 # Principal component analysis --------------------------------------------
 pca.dat <- por
-colsToUse <- 2:55 # columns to use for PCA (exclude date, Vero, sumFlow)
+colsToUse <- which(!names(pca.dat) %in% c("date", "Vero", "sumFlow"))  # columns to use for PCA (exclude date, Vero, sumFlow)
 
 pca1 <- FactoMineR::PCA(pca.dat[, colsToUse], graph = FALSE,
             ncp = 4, scale.unit = TRUE) 

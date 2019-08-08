@@ -5,6 +5,7 @@
 ^\.travis\.yml$
 ^\.Rproj\.user$
 ^docs$
+^vignettes
 ^appveyor\\.yml$
 ^.*\.Rproj$
 ^data\\a\.RData$

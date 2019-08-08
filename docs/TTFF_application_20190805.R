@@ -119,11 +119,13 @@ srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)),
 # flowDat.fin <- sum(flowDat.int$flow, na.rm = TRUE)
 
 
-flowDBKeys  <- c(#"03620", "03626",  ## exclude S12A, S12B
+flowDBKeys  <- c("03620", "03626",  ## include S12A, S12B
   "03632", "03638", "91487")
 flowDat     <- do.call(rbind, lapply(flowDBKeys, getDBHYDROhydro))
 flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
-flowDat.fin <- sum(flowDat.int$value, na.rm = TRUE)
+### Based on SFWMD's data, sum all structures for each day, then get mean daily value for the week.
+### Equivalently, just divide total sum by 7
+flowDat.fin <- sum(flowDat.int$value, na.rm = TRUE) / 7
 
 ### Zone A regulation schedule at beginning of current week
 ### why is this not consistent between years?
@@ -156,7 +158,7 @@ srsDat$week <- as.Date(as.character(cut(as.Date(srsDat$date), "week"))) # mean s
 srs.wkly    <- ddply(srsDat, .(week), summarise, srs = head(value, 1))
 
 flowDat$week <- as.Date(as.character(cut(as.Date(flowDat$date), "week"))) # summed flow (use previous week's)
-flow.wkly    <- ddply(flowDat, .(week), summarise, flow = sum(value, na.rm = TRUE))
+flow.wkly    <- ddply(flowDat, .(week), summarise, flow = sum(value, na.rm = TRUE) / 7)
 ### shift flows by one week
 flow.wkly    <- data.frame(week = flow.wkly$week, flow = flow.wkly$flow, prev.flow = c(NA, flow.wkly$flow[-c(nrow(flow.wkly))]))
 
@@ -211,31 +213,33 @@ png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/TTFFestimates.png"
 TTFF.color <- "firebrick2"
 seg.color  <- "dodgerblue3"
 par(mar = c(3, 5, 1, 0.5))
-plot(flow / 1000 ~ week, 
+plot(flow ~ week, 
      data = allDat[allDat$week < targetDate, ],  # exclude current partial week
-     pch = 19, cex = 0.6, las = 1, 
+     pch = 19, cex = 0.6, las = 1, yaxt = "n",
      xlim = c(beginDate, targetDate + 60), 
-     ylim = c(0, max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)]) / 1000), 
-     ylab = "Weekly flow \n (1k cfs; sum of daily flows at S12s and S333)",
+     ylim = c(0, max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])), 
+     ylab = "",
      xlab = "", type = "l")
+axis(side = 2, at = axTicks(side = 2), labels = axTicks(side = 2) / 1000, las = 1)
+mtext(text = "Weekly flow \n (1k cfs; sum of daily flows at S12s and S333)", side = 2, line = 2)
 mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
       side = 1, cex = 0.7, line=2, at = targetDate)
 ### Add prediction history
-points(x = allDat$week, y = allDat$TTFF / 1000, col = TTFF.color, lty = 2, type = "p", cex = 0.5, pch = 19)
-arrows(allDat$week, (allDat$TTFF - allDat$TTFF.err) / 1000, 
-       allDat$week, (allDat$TTFF + allDat$TTFF.err) / 1000, 
+points(x = allDat$week, y = allDat$TTFF, col = TTFF.color, lty = 2, type = "p", cex = 0.5, pch = 19)
+arrows(allDat$week, (allDat$TTFF - allDat$TTFF.err), 
+       allDat$week, (allDat$TTFF + allDat$TTFF.err) , 
        length=0.0, angle=90, code=3, col = TTFF.color)
 
-points(x = allDat$week, y = allDat$seg / 1000, col = seg.color, lty = 2, type = "p", cex = 0.5, pch = 19)
-arrows(allDat$week, (allDat$seg - allDat$seg.err) / 1000, 
-       allDat$week, (allDat$seg + allDat$seg.err) / 1000, 
+points(x = allDat$week, y = allDat$seg , col = seg.color, lty = 2, type = "p", cex = 0.5, pch = 19)
+arrows(allDat$week, (allDat$seg - allDat$seg.err) , 
+       allDat$week, (allDat$seg + allDat$seg.err) , 
        length=0.0, angle=90, code=3, col = seg.color)
 
-text(x = targetDate, y = tail(allDat$seg, 1) / 1000, 
+text(x = targetDate, y = tail(allDat$seg, 1) , 
      paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
 
-text(x = targetDate, y = tail(allDat$TTFF, 1) / 1000, 
+text(x = targetDate, y = tail(allDat$TTFF, 1) , 
      paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
 dev.off()
 
