@@ -69,7 +69,7 @@ S<sub>t</sub><sup>avg1</sup> is the spatial average of observed stages (ft, NGVD
 
 S<sub>t</sub><sup>nesrs2</sup> is observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
-Q<sub>t-1</sub> is the sum of observed releases at S12A, S12B, S12C, S12D and S333 for the previous week (cfs),
+Q<sub>t-1</sub> is the sum of observed releases at S12C, S12D and S333 for the previous week (cfs),
 
 R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
