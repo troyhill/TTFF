@@ -21,7 +21,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 <img src="{{site.url}}/figures/TTFFestimates.png" style="display: block; margin: auto;" />
 
 
-Figure 1. Observed flow through S333 and the S12C/D structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates for the current week are shown in red (multiple linear regression model) and blue (segmented regression model). 
+Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates for the current week are shown in red (multiple linear regression model) and blue (segmented regression model). 
 
 &nbsp;
 
@@ -63,13 +63,13 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 where:
 
-Q<sub>t</sub><sup>sum</sup> is the target flow (sum of  S12C, S12D and S333) for the current (upcoming) week, t (cfs),
+Q<sub>t</sub><sup>sum</sup> is the target flow (sum of  S12A/B/C/D and S333) for the current (upcoming) week, t (cfs),
 
 S<sub>t</sub><sup>avg1</sup> is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
 
 S<sub>t</sub><sup>nesrs2</sup> is observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
-Q<sub>t-1</sub> is the sum of observed releases at S12A, S12B, S12C, S12D and S333 for the previous week (cfs),
+Q<sub>t-1</sub> is the sum of observed releases at S12A/B/C/D and S333 for the previous week (cfs),
 
 R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
