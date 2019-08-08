@@ -21,7 +21,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 <img src="{{site.url}}/figures/TTFFestimates.png" style="display: block; margin: auto;" />
 
 
-Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](#1.-multiple-linear-regression) (red), [segmented regression](#2.-segmented-multiple-linear-regression) (blue), and [principal component analysis](#3.-principal-component-analysis) (green) are also shown. 
+Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green) are also shown. 
 
 &nbsp;
 
@@ -30,7 +30,7 @@ Figure 1. Observed flow through S333 and the four S12 structures during the past
 
 ## Model descriptions
 
-### 1. Multiple linear regression
+### Multiple linear regression
 
 This formula operates on a subset of available rainfall, precipitation, and PET stations and has the form: 
 
@@ -91,7 +91,7 @@ Adjusted R<sup>2</sup>: 0.93
 
 
 
-### 2. Segmented multiple linear regression
+### Segmented multiple linear regression
 
 A two-variable segmented regression model has also been proposed. The data used in the model are stages in northeast Shark River Slough and WCA3A, with data breakpoints set where stages in northeast Shark River Slough reach 7.0' and 7.9' NGVD. This model follows the form: 
 
@@ -113,7 +113,7 @@ Adjusted R<sup>2</sup>: 0.74
 
 &nbsp;
 
-### 3. Principal component analysis 
+### Principal component analysis 
 
 This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. A PCA is applied to a training dataset and then the model is used on recent data to generate a flow prediction.
 
