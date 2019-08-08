@@ -83,7 +83,9 @@ Coefficients and associated standard errors:
 | :---        | :----:     | :----: |  :----: |  :----: |  :----: |  ---: | 
 | Coefficient	    | 318.42  | -44.62  | 0.644 | 24.32 | -96.31  | -221.79 |
 | Standard Error  | 18.22	  | 18.50	 | 0.016 | 7.23 | 28.83  | 13.67 |
+| t value  | 17.5	  | -2.4	 | 39.4 | 3.4 | -3.3  | -16.2 |
 
+Adjusted R<sup>2</sup>: 0.93
 
 &nbsp;
 
@@ -105,23 +107,21 @@ Coefficients and associated standard errors:
 | :---           | :----:  | :----: |  :----: |  :----: | ---: | 
 | Coefficient	   | -3625.80   |  451.00 | 12.33  | 869.79 | 2132.31 |
 | Standard Error | 187.66   | 21.71  | 26.46	 | 75.39  | 328.95 |
+| t value | -19.3   | 20.8  | 0.5	 | 11.5  | 6.6 |
 
-
+Adjusted R<sup>2</sup>: 0.74
 
 &nbsp;
 
 ### 3. Principal component analysis 
 
-This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. The PCA approach has two stages; first, PCA is applied to generate an initial flow estimate, which is then square-root transformed to generate a final estimate.
+This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. A PCA is applied to a training dataset and then the model is used on recent data to generate a flow prediction.
 
-The PCA equation for the period of record has the following form:
+The six-dimension PCA used here has the following form:
 
 <!---
 
-[comment]: <> (formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input  " Q_{pred}  =  \beta_{0} +  \beta_{1}    \ast    PC1 + \beta_{2}   \ast PC2  + \beta_{3}   \ast PC3  + \beta_{4}   \ast PC4 ")
-
-
-![equation](http://www.sciweavers.org/tex2img.php?eq=Q_%7Bpred%7D%20%20%3D%20%20%5Cbeta_%7B0%7D%20%2B%20%20%5Cbeta_%7B1%7D%20%20%20%20%5Cast%20%20%20%20PC1%20%2B%20%5Cbeta_%7B2%7D%20%20%20%5Cast%20PC2%20%20%2B%20%5Cbeta_%7B3%7D%20%20%20%5Cast%20PC3%20%20%2B%20%5Cbeta_%7B4%7D%20%20%20%5Cast%20PC4%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+[comment]: <> (formula generated from http://www.sciweavers.org/free-online-latex-equation-editor using input  " Q_{pred}  =  \beta_{0} +  \beta_{1}    \ast    PC1 + \beta_{2}   \ast PC2  + \beta_{3}   \ast PC3  + \beta_{4}   \ast PC4   + \beta_{5}   \ast PC5   + \beta_{6}   \ast PC6 ")
 
 
 ![](https://github.com/troyhill/TTFF/blob/master/inst/figures/eqPCA.png "PCA formula")
@@ -138,22 +138,16 @@ The PCA equation for the period of record has the following form:
 
 Coefficients and associated standard errors:
 
-| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> |  
-| :---           | :----:  | :----: |  :----: |  :----: | ---: | 
-| Coefficient	   | 15177.31   | -176.01  | -1032.68 | 6255.03 | 427.15 |
-| Standard Error | 128.37 | 26.58 | 33.05	 | 72.68 | 90.22 |
+| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | B<sub>2</sub>	   | B<sub>3</sub>	 | B<sub>4</sub> |   B<sub>5</sub> |   B<sub>6</sub> |  
+| :---           | :----:  | :----: |  :----: |  :----: | :----: | :----: | ---: | 
+| Coefficient	| 721.6  | 344.1  | 145.3 | 105.5 | -134.2 | 150.6 | 97.7 |
+| Standard Error  | 5.8   | 1.7    | 3.2	 | 3.4 | 3.5 | 3.8 | 4.8 |
+| t value         | 124.8 | 201.1 | 45.2	 | 30.7 | -38.0 |39.1 | 20.3 | 
 
+Adjusted R<sup>2</sup>: 0.96
 
 &nbsp;
 
-The final flow prediction is based on a square-root transformation of the PCA prediction:
-
-Q = B<sub>0</sub> + B<sub>1</sub> * Q<sub>pred</sub><sup>1/2</sup>
-
-| Parameter	     | B<sub>0</sub>	  | B<sub>1</sub>	   | 
-| :---           | :----:  | ---: | 
-| Coefficient	   | -19828.2 | 298.40 |
-| Standard Error | 631.55 | 5.15 |
 
 
 &nbsp;
