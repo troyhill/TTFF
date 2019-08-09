@@ -31,7 +31,7 @@ Figure 1. Observed flow through S333 and the four S12 structures during the past
 <img src="{{site.url}}/figures/predicted_vs_observed.png" style="display: block; margin: auto;" width="500" />
 
 
-Figure 2. Observed and predicted flows during the past year. Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green). 
+Figure 2. Relationships between observed flows during the past year and values predicted by each model. Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green). 
 
 &nbsp;
 
