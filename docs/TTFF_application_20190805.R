@@ -149,6 +149,7 @@ allDat$TTFF     <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$f
 allDat$TTFF.err <- predict(object = ttff.mod, newdata = allDat, se.fit = TRUE)$se.fit
 
 
+
 # Segmented multiple linear regression ----------------------------------------
 
 
@@ -170,6 +171,8 @@ allDat$seg.err <- predict(object = segmented.mod, newdata = allDat, se.fit = TRU
 # PCA  --------------------------------------------------------------------
 
 ### can't recreate training dataset, so here's an approximation
+### this model isn't trained on iModel output, but on actual summed flows. 
+### period of record is also shorter and more recent than for the other models.
 
 rain.keys <- c(# "06044", "06041", "LX283", "JA344", "K8628", # too many missing values
                "06040", "HB872", "H2004", "H2005")
@@ -210,6 +213,12 @@ pca.wkly <- join_all(list(wkly.mean, wkly.sum), by = "week")
 pca.modern <- pca.wkly[pca.wkly$week >= Sys.Date() - 365, ]
 pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
 
+### could use iModel data where datasets overlap, but would have to align weeks to start on Friday
+### as is done in SFWMD's training data (pkg.dat)
+
+pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
+
+
 ### run PCA
 suppressWarnings(
   pca1 <- FactoMineR::PCA(pca.hist[, -1],  ncp = 6, scale.unit = TRUE)
@@ -231,9 +240,6 @@ testDat$pca.err <- predict(object = pca.lm, newdata = testDat, se.fit = TRUE)$se
 testDat         <- join_all(list(testDat, pca.modern[, c("week", "sumFlow")]), by = "week")
 
 
-summary(lm1 <- stats::lm(sumFlow ~ pca, data = testDat)) # r2 = 0.96
-plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6)
-abline(lm1, col = "red")
 
 
 
@@ -292,5 +298,38 @@ text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) ,
 text(x = targetDate, y = pcaVal,
      paste("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), "cfs"), pos = 4, col = pca.color)
 
+dev.off()
+
+
+
+
+# Correlations with observed flows ----------------------------------------
+
+png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/predicted_vs_observed.png", width = 6, height = 8, units = "in", res = 150)
+par(mfrow=c(1,1))
+par(mar=c(3.5, 4.5, 0.5, 0.5))
+xPos <- 900
+yPos <- 2850
+fontSize <- 1.25
+par(fig = c(0,1, 0.65, 1))
+plot(flow ~ seg, data = allDat[allDat$week >= min(testDat$week), ], pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000),
+     ylab = "", xlab = "", las = 1, col = seg.color)
+abline(seg.pred <- lm(seg ~ flow, data = allDat[allDat$week >= min(testDat$week), ]), col = seg.color, lty = 2)
+text(x = xPos, y = yPos,  cex = fontSize,
+     bquote("Segmented regression R"^2 * "= " * .(format(summary(seg.pred)$adj.r.squared, digits = 2))), col = seg.color)
+par(fig = c(0,1, 0.35, 0.7), new = TRUE)
+plot(flow ~ TTFF, data = allDat[allDat$week >= min(testDat$week), ], pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000), col = TTFF.color,
+     ylab = "", xlab = "", las = 1)
+mtext(side = 2, text = "Observed flow (cfs; S12s + S333)", line = 3.25)
+abline(ttff.pred <- lm(TTFF ~ flow, data = allDat[allDat$week >= min(testDat$week), ]), col = TTFF.color, lty = 2)
+text(x = xPos, y = yPos, cex = fontSize,
+     bquote("Multiple regression R"^2 * "= " * .(format(summary(ttff.pred)$adj.r.squared, digits = 2))), col = TTFF.color)
+par(new = TRUE, fig = c(0, 1, 0, 0.4))
+plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6, col = pca.color, xlim = c(0, 3000), ylim = c(0, 3000),
+     ylab = "", xlab = "", las = 1)
+mtext(side = 1, text = "Predicted flow (cfs)", line = 2)
+abline(pca.pred <- lm(sumFlow ~ pca, data = testDat), col = pca.color, lty = 2)
+text(x = xPos, y = yPos, cex = fontSize, 
+     bquote("PCA R"^2 * "= " * .(format(summary(pca.pred)$adj.r.squared, digits = 2))), col = pca.color)
 dev.off()
 
