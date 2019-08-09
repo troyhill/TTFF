@@ -309,7 +309,7 @@ dev.off()
 png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/predicted_vs_observed.png", width = 6, height = 8, units = "in", res = 150)
 par(mfrow=c(1,1))
 par(mar=c(3.5, 4.5, 0.5, 0.5))
-xPos <- 900
+xPos <- 0
 yPos <- 2850
 fontSize <- 1.25
 par(fig = c(0,1, 0.65, 1))
@@ -317,22 +317,22 @@ allDat.sub <- allDat[allDat$week >= min(testDat$week), ]
 
 plot(flow ~ seg, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000),
      ylab = "", xlab = "", las = 1, col = seg.color)
-abline(seg.pred <- lm(seg ~ flow, data = allDat.sub), col = seg.color, lty = 2)
-text(x = xPos, y = yPos,  cex = fontSize,
+abline(seg.pred <- lm(flow ~ seg, data = allDat.sub), col = seg.color, lty = 2)
+text(x = xPos, y = yPos,  cex = fontSize, adj = 0,
      bquote("Segmented regression R"^2 * "= " * .(format(summary(seg.pred)$adj.r.squared, digits = 2))), col = seg.color)
 par(fig = c(0,1, 0.35, 0.7), new = TRUE)
 plot(flow ~ TTFF, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000), col = TTFF.color,
      ylab = "", xlab = "", las = 1)
 mtext(side = 2, text = "Observed flow (cfs; S12s + S333)", line = 3.25)
-abline(ttff.pred <- lm(TTFF ~ flow, data = allDat.sub), col = TTFF.color, lty = 2)
-text(x = xPos, y = yPos, cex = fontSize,
+abline(ttff.pred <- lm(flow ~ TTFF, data = allDat.sub), col = TTFF.color, lty = 2)
+text(x = xPos, y = yPos, cex = fontSize, adj = 0,
      bquote("Multiple regression R"^2 * "= " * .(format(summary(ttff.pred)$adj.r.squared, digits = 2))), col = TTFF.color)
 par(new = TRUE, fig = c(0, 1, 0.05, 0.4))
 plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6, col = pca.color, xlim = c(0, 3000), ylim = c(0, 3000),
      ylab = "", xlab = "", las = 1)
 mtext(side = 1, text = "Predicted flow (cfs)", line = 2)
 abline(pca.pred <- lm(sumFlow ~ pca, data = testDat), col = pca.color, lty = 2)
-text(x = xPos, y = yPos, cex = fontSize, 
+text(x = xPos, y = yPos, cex = fontSize, adj = 0,
      bquote("PCA R"^2 * "= " * .(format(summary(pca.pred)$adj.r.squared, digits = 2))), col = pca.color)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
       side = 1, cex = 0.6, line=2.5, at = 2500)
