@@ -331,5 +331,7 @@ mtext(side = 1, text = "Predicted flow (cfs)", line = 2)
 abline(pca.pred <- lm(sumFlow ~ pca, data = testDat), col = pca.color, lty = 2)
 text(x = xPos, y = yPos, cex = fontSize, 
      bquote("PCA R"^2 * "= " * .(format(summary(pca.pred)$adj.r.squared, digits = 2))), col = pca.color)
+mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
+      side = 1, cex = 0.6, line=2.5, at = 2500)
 dev.off()
 
