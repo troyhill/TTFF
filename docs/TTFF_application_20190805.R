@@ -5,9 +5,7 @@
 
 pkg.list <- c("segmented", "plyr", "FactoMineR", "devtools")
 missing.packages <- pkg.list[which(!pkg.list %in% installed.packages())]
-if (length(missing.packages) > 0) {
-  install.packages(missing.packages, repos='http://cran.us.r-project.org')
-}
+if (length(missing.packages) > 0)  install.packages(missing.packages, repos='http://cran.us.r-project.org')
 if (!"SFNRC" %in% installed.packages()) devtools::install_github("troyhill/SFNRC")
 if (!"TTFF" %in% installed.packages()) devtools::install_github("troyhill/TTFF")
 
@@ -275,7 +273,7 @@ axis(side = 2, at = axTicks(side = 2), labels = axTicks(side = 2) / 1000, las = 
 mtext(text = "Mean cumulative daily flow \n (1k cfs per day; sum of S12s + S333)", side = 2, line = 2.3)
 mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
-      side = 1, cex = 0.7, line=2, at = targetDate)
+      side = 1, cex = 0.7, line=2, at = targetDate + 60, adj = 1)
 ### Add prediction history
 points(x = allDat$week, y = allDat$TTFF, col = TTFF.color, lty = 2, type = "p", cex = 0.5, pch = 19)
 arrows(allDat$week, (allDat$TTFF - allDat$TTFF.err), 
@@ -293,11 +291,11 @@ arrows(testDat$week, (testDat$pca - testDat$pca.err) ,
        length=0.0, angle=90, code=3, col = pca.color)
 
 text(x = targetDate, y = segVal, # tail(allDat$seg, 1) , 
-     paste("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
+     paste0("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
 text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) , 
-     paste("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
+     paste0("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
 text(x = targetDate, y = pcaVal,
-     paste("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), "cfs"), pos = 4, col = pca.color)
+     paste0("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), "cfs"), pos = 4, col = pca.color)
 
 dev.off()
 
@@ -309,32 +307,33 @@ dev.off()
 png(filename = "/home/thill/RDATA/git-repos/TTFF/docs/figures/predicted_vs_observed.png", width = 6, height = 8, units = "in", res = 150)
 par(mfrow=c(1,1))
 par(mar=c(3.5, 4.5, 0.5, 0.5))
-xPos <- 0
-yPos <- 2850
+allDat.sub <- allDat[allDat$week >= min(testDat$week), ]
+maxVal <- ceiling(max(allDat.sub$flow, na.rm = TRUE) / 1e3) * 1e3
+xPos <- 0             # position of r2 text
+yPos <- maxVal * 0.95 # position of r2 text
 fontSize <- 1.25
 par(fig = c(0,1, 0.65, 1))
-allDat.sub <- allDat[allDat$week >= min(testDat$week), ]
 
-plot(flow ~ seg, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000),
+plot(flow ~ seg, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, maxVal), ylim = c(0, maxVal),
      ylab = "", xlab = "", las = 1, col = seg.color)
 abline(seg.pred <- lm(flow ~ seg, data = allDat.sub), col = seg.color, lty = 2)
 text(x = xPos, y = yPos,  cex = fontSize, adj = 0,
      bquote("Segmented regression R"^2 * "= " * .(format(summary(seg.pred)$adj.r.squared, digits = 2))), col = seg.color)
 par(fig = c(0,1, 0.35, 0.7), new = TRUE)
-plot(flow ~ TTFF, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000), col = TTFF.color,
+plot(flow ~ TTFF, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, maxVal), ylim = c(0, maxVal), col = TTFF.color,
      ylab = "", xlab = "", las = 1)
 mtext(side = 2, text = "Observed flow (cfs; S12s + S333)", line = 3.25)
 abline(ttff.pred <- lm(flow ~ TTFF, data = allDat.sub), col = TTFF.color, lty = 2)
 text(x = xPos, y = yPos, cex = fontSize, adj = 0,
      bquote("Multiple regression R"^2 * "= " * .(format(summary(ttff.pred)$adj.r.squared, digits = 2))), col = TTFF.color)
 par(new = TRUE, fig = c(0, 1, 0.05, 0.4))
-plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6, col = pca.color, xlim = c(0, 3000), ylim = c(0, 3000),
+plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6, col = pca.color, xlim = c(0, maxVal), ylim = c(0, maxVal),
      ylab = "", xlab = "", las = 1)
 mtext(side = 1, text = "Predicted flow (cfs)", line = 2)
 abline(pca.pred <- lm(sumFlow ~ pca, data = testDat), col = pca.color, lty = 2)
 text(x = xPos, y = yPos, cex = fontSize, adj = 0,
      bquote("PCA R"^2 * "= " * .(format(summary(pca.pred)$adj.r.squared, digits = 2))), col = pca.color)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
-      side = 1, cex = 0.6, line=2.5, at = 2500)
+      side = 1, cex = 0.6, line=2.5, at = maxVal, adj = 1)
 dev.off()
 
