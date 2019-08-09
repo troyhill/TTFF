@@ -324,7 +324,7 @@ mtext(side = 2, text = "Observed flow (cfs; S12s + S333)", line = 3.25)
 abline(ttff.pred <- lm(TTFF ~ flow, data = allDat[allDat$week >= min(testDat$week), ]), col = TTFF.color, lty = 2)
 text(x = xPos, y = yPos, cex = fontSize,
      bquote("Multiple regression R"^2 * "= " * .(format(summary(ttff.pred)$adj.r.squared, digits = 2))), col = TTFF.color)
-par(new = TRUE, fig = c(0, 1, 0, 0.4))
+par(new = TRUE, fig = c(0, 1, 0.05, 0.4))
 plot(sumFlow ~ pca, data = testDat, pch = 19, cex = 0.6, col = pca.color, xlim = c(0, 3000), ylim = c(0, 3000),
      ylab = "", xlab = "", las = 1)
 mtext(side = 1, text = "Predicted flow (cfs)", line = 2)
