@@ -4,7 +4,7 @@
 \alias{mergeData}
 \title{Merge COP data}
 \usage{
-mergeData(rainfall, PET, stage, flow)
+mergeData(rainfall, PET, stage, flow, firstDayOfWeek = "Friday")
 }
 \arguments{
 \item{rainfall}{file address of a tab-delimited .txt file containing daily rainfall data}
@@ -14,6 +14,8 @@ mergeData(rainfall, PET, stage, flow)
 \item{stage}{file address of a tab-delimited .txt file containing daily stage data}
 
 \item{flow}{file address of a tab-delimited .txt file containing daily flow data}
+
+\item{firstDayOfWeek}{character element specifying the first day of each week (default = "Friday", purely to match SFWMD's arbitrary choice)}
 }
 \value{
 a dataframe with all input variables

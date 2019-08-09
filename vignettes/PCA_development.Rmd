@@ -40,10 +40,10 @@ To prepare the 41-year COP dataset for PCA, daily input data provided by the Sou
 
 ```{r compile data, include=TRUE, echo=TRUE, eval=FALSE}
 ### generate data for period of record by compiling from tab-delimited .txt files
-rainDat  <- system.file("extdata", "data_Daily_Rain.txt", package = "COPmod")
-PETDat   <- system.file("extdata", "data_daily_PET.txt", package = "COPmod")
-stageDat <- system.file("extdata", "data_ALT_output_stage.txt", package = "COPmod")
-flowDat  <- system.file("extdata", "data_ALTO_output_Flows.txt", package = "COPmod") 
+rainDat  <- system.file("extdata", "data_Daily_Rain.txt", package = "TTFF")
+PETDat   <- system.file("extdata", "data_daily_PET.txt", package = "TTFF")
+stageDat <- system.file("extdata", "data_ALT_output_stage.txt", package = "TTFF")
+flowDat  <- system.file("extdata", "data_ALTO_output_Flows.txt", package = "TTFF") 
 
 
 por <- mergeData(rainfall = rainDat, PET = PETDat, 
@@ -62,7 +62,7 @@ Applying PCA to the 54-variable COP input dataset shows that 81% of the variatio
 ```{r PCA on whole dataset, echo = TRUE, fig.width = 4.5, fig.height = 4}
 # Principal component analysis --------------------------------------------
 pca.dat <- por
-colsToUse <- 2:55 # columns to use for PCA (exclude date, Vero, sumFlow)
+colsToUse <- which(!names(pca.dat) %in% c("date", "Vero", "sumFlow"))  # columns to use for PCA (exclude date, Vero, sumFlow)
 
 pca1 <- FactoMineR::PCA(pca.dat[, colsToUse], graph = FALSE,
             ncp = 4, scale.unit = TRUE) 
