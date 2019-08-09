@@ -28,10 +28,10 @@ library(SFNRC)
 
 # Prepare data ------------------------------------------------------------
 
-targetDate <- Sys.Date()
+
+targetDate <- as.Date(as.character(cut(as.Date(Sys.Date()), "week"))) 
 # adjustment factor needed to use Friday as the start of the week, per SFWMD training data.
-weekAdjust <- 4
-  
+
 
 ### PET 
 ### not sure what time scale is used. DataForEver PET is in mm
