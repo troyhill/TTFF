@@ -253,13 +253,14 @@ TTFF.color <- "firebrick2"
 seg.color  <- "dodgerblue3"
 pca.color  <- "darkgreen"
 maxVal     <-  1.1 * max(allDat$flow[(allDat$week > beginDate) & (allDat$week < targetDate)])
-segVal     <- 0.6*maxVal
-TTFFVal    <- 0.85*maxVal
-pcaVal     <- 0.35*maxVal
-if (tail(allDat$seg, 1) >= tail(allDat$TTFF, 1)) {
-  segVal   <- 0.85*maxVal
-  TTFFVal  <- 0.6*maxVal
-}
+finalVals  <- data.frame(model = c("TTFF", "seg", "pca"),
+  vals = c(tail(allDat$TTFF, 1), tail(allDat$seg, 1), tail(testDat$pca, 1)))
+finalVals  <- finalVals[order(-finalVals$vals),] 
+finalVals$textPos <- c(0.85*maxVal, 0.6*maxVal, 0.35*maxVal)
+TTFFVal    <- finalVals$textPos[finalVals$model == "TTFF"]
+segVal     <- finalVals$textPos[finalVals$model == "seg"]
+pcaVal     <- finalVals$textPos[finalVals$model == "pca"]
+
 
 
 par(mar = c(3, 5, 1, 0.5))
@@ -312,16 +313,18 @@ xPos <- 900
 yPos <- 2850
 fontSize <- 1.25
 par(fig = c(0,1, 0.65, 1))
-plot(flow ~ seg, data = allDat[allDat$week >= min(testDat$week), ], pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000),
+allDat.sub <- allDat[allDat$week >= min(testDat$week), ]
+
+plot(flow ~ seg, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000),
      ylab = "", xlab = "", las = 1, col = seg.color)
-abline(seg.pred <- lm(seg ~ flow, data = allDat[allDat$week >= min(testDat$week), ]), col = seg.color, lty = 2)
+abline(seg.pred <- lm(seg ~ flow, data = allDat.sub), col = seg.color, lty = 2)
 text(x = xPos, y = yPos,  cex = fontSize,
      bquote("Segmented regression R"^2 * "= " * .(format(summary(seg.pred)$adj.r.squared, digits = 2))), col = seg.color)
 par(fig = c(0,1, 0.35, 0.7), new = TRUE)
-plot(flow ~ TTFF, data = allDat[allDat$week >= min(testDat$week), ], pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000), col = TTFF.color,
+plot(flow ~ TTFF, data = allDat.sub, pch = 19, cex = 0.6, xlim = c(0, 3000), ylim = c(0, 3000), col = TTFF.color,
      ylab = "", xlab = "", las = 1)
 mtext(side = 2, text = "Observed flow (cfs; S12s + S333)", line = 3.25)
-abline(ttff.pred <- lm(TTFF ~ flow, data = allDat[allDat$week >= min(testDat$week), ]), col = TTFF.color, lty = 2)
+abline(ttff.pred <- lm(TTFF ~ flow, data = allDat.sub), col = TTFF.color, lty = 2)
 text(x = xPos, y = yPos, cex = fontSize,
      bquote("Multiple regression R"^2 * "= " * .(format(summary(ttff.pred)$adj.r.squared, digits = 2))), col = TTFF.color)
 par(new = TRUE, fig = c(0, 1, 0.05, 0.4))
