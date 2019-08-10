@@ -291,11 +291,11 @@ arrows(testDat$week, (testDat$pca - testDat$pca.err) ,
        length=0.0, angle=90, code=3, col = pca.color)
 
 text(x = targetDate, y = segVal, # tail(allDat$seg, 1) , 
-     paste0("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), "cfs"), pos = 4, col = seg.color)
+     paste0("Segmented model:\n", round(tail(allDat$seg, 1)), "\u00b1", round(tail(allDat$seg.err, 1)), " cfs"), pos = 4, col = seg.color)
 text(x = targetDate, y = TTFFVal, # tail(allDat$TTFF, 1) , 
      paste0("Multiple regression:\n", round(tail(allDat$TTFF, 1)), "\u00b1", round(tail(allDat$TTFF.err, 1)), " cfs"), pos = 4, col = TTFF.color)
 text(x = targetDate, y = pcaVal,
-     paste0("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), "cfs"), pos = 4, col = pca.color)
+     paste0("PCA model:\n", round(tail(testDat$pca, 1)), "\u00b1", round(tail(testDat$pca.err, 1)), " cfs"), pos = 4, col = pca.color)
 
 dev.off()
 
