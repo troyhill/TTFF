@@ -299,7 +299,7 @@ text(x = targetDate, y = pcaVal,
 
 dev.off()
 
-
+  
 
 
 # Correlations with observed flows ----------------------------------------
