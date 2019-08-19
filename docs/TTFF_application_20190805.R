@@ -214,7 +214,7 @@ pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
 ### could use iModel data where datasets overlap, but would have to align weeks to start on Friday
 ### as is done in SFWMD's training data (pkg.dat)
 
-pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
+# pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
 
 
 ### run PCA
