@@ -219,7 +219,7 @@ pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
 
 ### run PCA
 suppressWarnings(
-  pca1 <- FactoMineR::PCA(pca.hist[, -1],  ncp = 6, scale.unit = TRUE)
+  pca1 <- FactoMineR::PCA(pca.hist[, -c(grep(names(pca.hist), pattern = c("week|sumFlow")))],  ncp = 6, scale.unit = TRUE)
 )
 
 # head(pca1$eig[, c(2,3)]) # ~81% of the variance in the data is captured in the first five principal components
