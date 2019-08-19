@@ -176,13 +176,19 @@ rain.keys <- c(# "06044", "06041", "LX283", "JA344", "K8628", # too many missing
                "06040", "HB872", "H2004", "H2005")
 pet.keys  <- c("US347", "OH516", "OH513")
 rh.keys   <- c("LA372", "UP568", "GE351", "16259", "OH514")
-hw.keys   <- c("90230", "00604", "AO063", "01307", "AJ013") # all in NAVD88?
+hw.keys   <- c("90230", "00604", "AO063", "01307") # all in NAVD88?
 ### flow: head(flowDat)
 
 rain.pca    <- do.call(rbind, lapply(rain.keys, getDBHYDROhydro))
 pet.pca     <- do.call(rbind, lapply(pet.keys, getDBHYDROhydro))
 rh.pca      <- do.call(rbind, lapply(rh.keys, getDBHYDROhydro))
 hw.pca      <- do.call(rbind, lapply(hw.keys, getDBHYDROhydro))
+
+### S333 HW has to be stitched together
+s333_1      <- getDBHYDROhydro(dbkey = "P0885")
+s333_2      <- getDBHYDROhydro(dbkey = "AJ013")
+s333        <- rbind(s333_1, s333_2[!s333_2$date %in% s333_1$date, ])
+hw.pca      <- rbind(hw.pca, s333)
 
 
 rain.pca.int         <- reshape(rain.pca[, c("stn", "date", "value")], idvar = "date", timevar = "stn", direction = "wide")
