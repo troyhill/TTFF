@@ -174,7 +174,7 @@ allDat$seg.err <- predict(object = segmented.mod, newdata = allDat, se.fit = TRU
 
 rain.keys <- c(# "06044", "06041", "LX283", "JA344", "K8628", # too many missing values
                "06040", "HB872", "H2004", "H2005")
-pet.keys  <- c("US347", "OH516", "OH513")
+pet.keys  <- c("US347", "UD384") # changed 20200503 to remove defunct codes: c("OH516", "OH513")
 rh.keys   <- c("LA372", "UP568", "GE351", "16259", "OH514")
 hw.keys   <- c("90230", "00604", "AO063", "01307") # all in NAVD88?
 ### flow: head(flowDat)
@@ -240,6 +240,7 @@ pcaPred <- FactoMineR::predict.PCA(pca1, newdata = pca.modern)
 testDat <- data.frame(pcaPred$coord, week = pca.modern$week)
 
 testDat$pca     <- predict(object = pca.lm, newdata = testDat, se.fit = TRUE)$fit
+testDat$pca[testDat$pca < 0] <- 0 # change negative values to zero
 testDat$pca.err <- predict(object = pca.lm, newdata = testDat, se.fit = TRUE)$se.fit
 testDat         <- join_all(list(testDat, pca.modern[, c("week", "sumFlow")]), by = "week")
 
