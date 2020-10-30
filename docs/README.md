@@ -1,7 +1,7 @@
 
 # Estimating flow across Tamiami Trail
 
-The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving across Tamiami Trail through five water management structures: S12A, S12B, S12C, S12D, and S333. This page and the accompanying R package compare different approaches to modeling flow. These approaches use data from a network of stage, potential evapotranspiration (PET), and rainfall gauges in WCA 3A and Everglades National Park. Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
+The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving across Tamiami Trail through five water management structures: S12A, S12B, S12C, S12D, and S333. This page and the accompanying R package compare different approaches to modeling flow. These approaches use data from a network of stage, potential evapotranspiration (PET), and rainfall gauges in Water Conservation Area 3A (WCA3A) and Everglades National Park (ENP). Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
 
 &nbsp;
 
@@ -125,7 +125,7 @@ Adjusted R<sup>2</sup>: 0.74
 
 ### Principal component analysis 
 
-This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of truly independent variables. A PCA is applied to a training dataset and then the model is used on recent data to generate a flow prediction.
+This approach uses all available data. PCA reduces the dimensionality of the full dataset to a smaller number of statistically independent synthetic variables. A PCA is applied to a training dataset and then the model is used on recent data to generate a flow prediction.
 
 The six-dimension PCA used here has the following form:
 
