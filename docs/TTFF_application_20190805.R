@@ -84,8 +84,11 @@ srsDat.fin <- ifelse(targetDate %in% as.Date(as.character(srsDat$date)),
 ### Instantaneous DBKeys: 
 ### Daily means DBKeys: c("03620", "03626", "03632", "03638", "91487")
 ### alternative DBKeys: S12A: "03620"; S12B: "00610"; S12C: "00621"; S12D: "01310"; S333: "65086"
-flowDBKeys  <- c("03620", "03626", "03632", "03638", "91487")
+flowDBKeys  <- c("03620", "03626", "03632", "03638", "91487", "40371", "91488")
 flowDat     <- do.call(rbind, lapply(flowDBKeys, getDBHYDROhydro))
+
+### change S334 flows to negative (so they're subtracted)
+flowDat$value[flowDat$stn %in% "S334"] <- -1 * flowDat$value[flowDat$stn %in% "S334"]
 flowDat.int <- flowDat[as.Date(as.character(flowDat$date)) %in% seq.Date(from = targetDate - 7, to = targetDate - 1, by = "day"), ]
 ### Based on SFWMD's data, sum all structures for each day, then get mean daily value for the week.
 ### Equivalently, just divide total sum by 7
@@ -213,9 +216,21 @@ wkly.mean$flow.lag <- c(NA, wkly.mean$sumFlow[-nrow(wkly.mean)])
 
 pca.wkly <- join_all(list(wkly.mean, wkly.sum), by = "week")
 
-### separate past year's data
+### change flow NaNs to zeroes, add 333 + 333N flow into single variable
+for (i in 1:length(grep(x = names(pca.wkly), pattern = "flow"))) {
+  colVal <- grep(x = names(pca.wkly), pattern = "flow")[i]
+  pca.wkly[is.na(pca.wkly[, colVal]), colVal] <- 0
+}
+pca.wkly$flow.S333All <- pca.wkly$flow.S333 + pca.wkly$flow.S333N
+tail(pca.wkly)
+### remove S333 and SeeeN columns
+pca.wkly <- pca.wkly[, !grepl(x = names(pca.wkly), pattern = "flow.S333$|flow.S333N$")]
+
+### separate past year's data and 
 pca.modern <- pca.wkly[pca.wkly$week >= Sys.Date() - 365, ]
 pca.hist   <- pca.wkly[pca.wkly$week < Sys.Date() - 365, ]
+
+
 
 ### could use iModel data where datasets overlap, but would have to align weeks to start on Friday
 ### as is done in SFWMD's training data (pkg.dat)
@@ -277,7 +292,7 @@ plot(flow ~ week,
      ylab = "",
      xlab = "", type = "l")
 axis(side = 2, at = axTicks(side = 2), labels = axTicks(side = 2) / 1000, las = 1)
-mtext(text = "Mean cumulative daily flow \n (1k cfs per day; sum of S12s + S333)", side = 2, line = 2.3)
+mtext(text = "Mean daily flow \n (1k cfs per day; S12s + S333 + S333N - S334)", side = 2, line = 2.3)
 mtext(text = paste0("Flow estimates for week beginning ", format(as.Date(targetDate), "%d %b %Y")), side = 3)
 mtext(text = paste0("Figure generated on ", format(as.Date(Sys.Date()), "%d %b %Y")), 
       side = 1, cex = 0.7, line=2, at = targetDate + 60, adj = 1)
