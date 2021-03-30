@@ -25,8 +25,9 @@ This page shows data purely for exploratory and information purposes. The multip
 
 -->
 
-<img src="{{site.url}}/figures/TTFFestimates.png" style="display: block; margin: auto;" />
-
+<p align="middle">
+  <img src="{{site.url}}/figures/TTFFestimates.png" width="800" />
+</p>
 
 Figure 1. Observed flows into ENP during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green) are also shown. 
 
