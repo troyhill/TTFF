@@ -1,9 +1,11 @@
 
 # Estimating flow across Tamiami Trail
 
-The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving across Tamiami Trail through five water management structures: S12A, S12B, S12C, S12D, and S333. This page and the accompanying R package compare different approaches to modeling flow. These approaches use data from a network of stage, potential evapotranspiration (PET), and rainfall gauges in Water Conservation Area 3A (WCA3A) and Everglades National Park (ENP). Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
+The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water moving from Water Conservation Area 3A (WCA3A) into Everglades National Park (ENP). Flows are calculated based on seven water management structures: S12A, S12B, S12C, S12D, S333, S333N, and S334. This page and the accompanying R package compare different approaches to modeling these flows. These approaches use data from a network of stage, potential evapotranspiration (PET), and rainfall gauges in WCA3A and ENP. Estimates from each model for the current week are shown immediately below, followed by descriptions of the individual approaches.
 
 &nbsp;
+
+This page shows data purely for exploratory and information purposes. The multiple regression model described below is the TTFF model described in Appendix H of the 2020 Combined Operational Plan's Environmental Impact Statement. Nonetheless, the output described below may differ from official TTFF targets. For official TTFF targets, users are referred to the South Florida Water Management District's [TTFF reports](https://www.sfwmd.gov/documents-by-tag/ttffreport).
 
 
 ## Current model values:
@@ -21,7 +23,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 <img src="{{site.url}}/figures/TTFFestimates.png" style="display: block; margin: auto;" />
 
 
-Figure 1. Observed flow through S333 and the four S12 structures during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green) are also shown. 
+Figure 1. Observed flows into ENP during the past nine months (black line). Values shown are the average combined daily flow in a given week (average daily flow at five structures, summed for each week and then divided by 7). Flow estimates generated using [multiple linear regression](#multiple-linear-regression) (red), [segmented regression](#segmented-multiple-linear-regression) (blue), and [principal component analysis](#principal-component-analysis) (green) are also shown. 
 
 &nbsp;
 
@@ -73,13 +75,13 @@ This formula operates on a subset of available rainfall, precipitation, and PET 
 
 where:
 
-Q<sub>t</sub><sup>sum</sup> is the target flow (sum of  S12A/B/C/D and S333) for the current (upcoming) week, t (cfs),
+Q<sub>t</sub><sup>sum</sup> is the target flow (S12A/B/C/D + S333 + S333N - S334) for the current (upcoming) week, t (cfs),
 
 S<sub>t</sub><sup>avg1</sup> is the spatial average of observed stages (ft, NGVD) at WCA3A stages A-3, A-4 and A3-28 for the start of the current week t,
 
 S<sub>t</sub><sup>nesrs2</sup> is observed stage (ft, NGVD) at ENP stage NESRS2 for the start of the current week,
 
-Q<sub>t-1</sub> is the sum of observed releases at S12A/B/C/D and S333 for the previous week (cfs),
+Q<sub>t-1</sub> is the sum of observed flows for the previous week (cfs),
 
 R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
 
