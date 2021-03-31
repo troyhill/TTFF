@@ -10,7 +10,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 
 &nbsp;
 
-This page shows data purely for exploratory and information purposes. The multiple regression model described below is the TTFF model reported in Appendix H of the 2020 Combined Operational Plan's Environmental Impact Statement. Nonetheless, the output described below may differ from official TTFF targets. For official TTFF targets, users are referred to the South Florida Water Management District's [TTFF reports](https://www.sfwmd.gov/documents-by-tag/ttffreport).
+The information shown on this page is intended solely for educational purposes. The multiple regression model described below is the TTFF model reported in [Appendix H](https://usace.contentdm.oclc.org/digital/collection/p16021coll7/id/13365/) of the 2020 Combined Operational Plan's Environmental Impact Statement. Nonetheless, the output described below may differ from official TTFF targets. For official TTFF targets, users are referred to the South Florida Water Management District's [TTFF reports](https://www.sfwmd.gov/documents-by-tag/ttffreport).
 
 
 ## Current model values:
