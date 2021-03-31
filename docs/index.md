@@ -10,7 +10,7 @@ The Tamiami Trail Flow Formula (TTFF) provides weekly flow targets for water mov
 
 &nbsp;
 
-This page shows data purely for exploratory and information purposes. The multiple regression model described below is the TTFF model described in Appendix H of the 2020 Combined Operational Plan's Environmental Impact Statement. Nonetheless, the output described below may differ from official TTFF targets. For official TTFF targets, users are referred to the South Florida Water Management District's [TTFF reports](https://www.sfwmd.gov/documents-by-tag/ttffreport).
+This page shows data purely for exploratory and information purposes. The multiple regression model described below is the TTFF model reported in Appendix H of the 2020 Combined Operational Plan's Environmental Impact Statement. Nonetheless, the output described below may differ from official TTFF targets. For official TTFF targets, users are referred to the South Florida Water Management District's [TTFF reports](https://www.sfwmd.gov/documents-by-tag/ttffreport).
 
 
 ## Current model values:
@@ -89,7 +89,7 @@ S<sub>t</sub><sup>nesrs2</sup> is observed stage (ft, NGVD) at ENP stage NESRS2 
 
 Q<sub>t-1</sub> is the sum of observed flows for the previous week (cfs),
 
-R<sub>t</sub> is the average weekly rainfall (in) for the entire WCA3A and BCNP for current week t (see map),
+R<sub>t</sub> is the average weekly rainfall (in) for WCA3A and BCNP for current week t,
 
 PET<sub>t</sub> is the potential evaporation (in) at the Tamiami Trail Station (3AS3WX), and
 
